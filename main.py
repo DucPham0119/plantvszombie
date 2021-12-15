@@ -9,28 +9,30 @@ WINDOWN_HEIGHT = 700
 display_surface = pygame.display.set_mode((WINDOWN_WIDTH, WINDOWN_HEIGHT))
 pygame.display.set_caption("Game Plant vs Zombie")
 
-#Set FPS and clock
+# Set FPS and clock
 FPS = 60
 clock = pygame.time.Clock()
 
-#Load in a background image (we must resize)
+# Load in a background image (we must resize)
 background_image = pygame.transform.scale(pygame.image.load("assets/Background/Background_1.jpg"), (1280, 736))
 background_rect = background_image.get_rect()
 background_rect.topleft = (0, 0)
 
+
 # class Game
-#Define classes
+# Define classes
 class Game():
     """A class to help manage gameplay"""
 
     def __init__(self, zombie_group):
         """Initialize the game"""
-        #Set constant variables
+        # Set constant variables
+        self.HUD_font = pygame.font.SysFont('calibri', 64)
         self.title_font = pygame.font.SysFont('calibri', 64)
         self.STARTING_ROUND_TIME = 30
         self.STARTING_ZOMBIE_CREATION_TIME = 5
 
-        #Set game values
+        # Set game values
         self.score = 0
         self.round_number = 1
         self.frame_count = 0
@@ -53,10 +55,6 @@ class Game():
         score_rect = score_text.get_rect()
         score_rect.topleft = (10, WINDOWN_HEIGHT - 50)
 
-        health_text = self.HUD_font.render("Health: " + str(self.player.health), True, WHITE)
-        health_rect = health_text.get_rect()
-        health_rect.topleft = (10, WINDOWN_HEIGHT - 25)
-
         title_text = self.title_font.render("Zombie Knight", True, GREEN)
         title_rect = title_text.get_rect()
         title_rect.center = (WINDOWN_WIDTH // 2, WINDOWN_WIDTH - 25)
@@ -71,7 +69,6 @@ class Game():
 
         # Draw the HUD
         display_surface.blit(score_text, score_rect)
-        display_surface.blit(health_text, health_rect)
         display_surface.blit(title_text, title_rect)
         display_surface.blit(round_text, round_rect)
         display_surface.blit(time_text, time_rect)
@@ -82,7 +79,7 @@ class Game():
         if self.frame_count % FPS == 0:
             # Only add a zombie if zombie creation time has passed
             if self.round_time % self.zombie_creation_time == 0:
-                zombie = Zombie(600, 500,"zombie", 10)
+                zombie = Zombie(600, 500, "zombie", 10)
                 self.zombie_group.add(zombie)
 
     def pause_game(self, main_text, sub_text):
@@ -150,20 +147,16 @@ class Zombie(pygame.sprite.Sprite):
 
     def update(self):
         self.animation()
-        
+
     def animation(self):
-        if self.state=="walk":
-            self.walk_frames.append(pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png",(166.144))))
-
-    
-        
-
-
+        if self.state == "walk":
+            self.walk_frames.append(
+                pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png"), (166, 144)))
 
 
 zombie_group = pygame.sprite.Group()
 
-#Create a game
+# Create a game
 my_game = Game(zombie_group)
 my_game.pause_game("Zombie Knight", "Press 'Enter' to Begin")
 
