@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 pygame.init()
@@ -78,8 +80,10 @@ class Game():
         # Check to add a zombie every second
         if self.frame_count % FPS == 0:
             # Only add a zombie if zombie creation time has passed
-            if self.round_time % self.zombie_creation_time == 0:
-                zombie = Zombie(600, 500, "zombie", 10)
+            if self.round_time % self.zombie_creation_time == 0 and len(self.zombie_group) < 10:
+                x =random.randint(1000,WINDOWN_WIDTH) +40
+                y =random.randint(50,WINDOWN_HEIGHT-100) -10
+                zombie = Zombie(x, y, "zombie")
                 self.zombie_group.add(zombie)
 
     def pause_game(self, main_text, sub_text):
@@ -122,39 +126,23 @@ class Game():
 
 # class Zombie
 class Zombie(pygame.sprite.Sprite):
-    def __init__(self, x, y, name, health, head_group=None, damage=1):
+    def __init__(self, x, y, name):
         super().__init__()
-        self.walk_frames = []
-        self.name = name
-        self.frames = []
-        self.frame_index = 0
-        self.loadImages()
-        self.frame_num = len(self.frames)
-
-        self.image = self.frames[self.frame_index]
+        self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
         self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.bottom = y
-
-        self.health = health
-        self.damage = damage
-        self.dead = False
-        self.losHead = False
-        self.helmet = False
-        self.head_group = head_group
-
-        self.state = "walk"
+        self.rect.topright = (x,y)
+        self.name = name
 
     def update(self):
         self.animation()
 
     def animation(self):
-        if self.state == "walk":
-            self.walk_frames.append(
-                pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png"), (166, 144)))
+        pass
+
 
 
 zombie_group = pygame.sprite.Group()
+# zombie_group.add(Zombie(WINDOWN_WIDTH, WINDOWN_HEIGHT // 2, "zombie"))
 
 # Create a game
 my_game = Game(zombie_group)
@@ -171,6 +159,7 @@ while running:
     # Blit the background
     display_surface.blit(background_image, background_rect)
     # update and draw sprite group
+    my_game.update()
     zombie_group.update()
     zombie_group.draw(display_surface)
     # Update the display and tick the clock
