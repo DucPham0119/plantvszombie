@@ -31,15 +31,11 @@ class Game():
         # Set constant variables
         self.HUD_font = pygame.font.SysFont('calibri', 64)
         self.title_font = pygame.font.SysFont('calibri', 64)
-        self.STARTING_ROUND_TIME = 30
-        self.STARTING_ZOMBIE_CREATION_TIME = 5
 
         # Set game values
         self.score = 0
         self.round_number = 1
         self.frame_count = 0
-        self.round_time = self.STARTING_ROUND_TIME
-        self.zombie_creation_time = self.STARTING_ZOMBIE_CREATION_TIME
 
         self.zombie_group = zombie_group
 
@@ -80,9 +76,9 @@ class Game():
         # Check to add a zombie every second
         if self.frame_count % FPS == 0:
             # Only add a zombie if zombie creation time has passed
-            if self.round_time % self.zombie_creation_time == 0 and len(self.zombie_group) < 10:
-                x =random.randint(1000,WINDOWN_WIDTH) +40
-                y =random.randint(50,WINDOWN_HEIGHT-100) -10
+            if len(self.zombie_group) < 10:
+                x = random.randint(1000, WINDOWN_WIDTH) + 40
+                y = random.randint(50, WINDOWN_HEIGHT - 100) - 10
                 zombie = Zombie(x, y, "zombie")
                 self.zombie_group.add(zombie)
 
@@ -130,15 +126,60 @@ class Zombie(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
         self.rect = self.image.get_rect()
-        self.rect.topright = (x,y)
+        self.rect.topright = (x, y)
         self.name = name
+        self.current_sprite = 0
 
     def update(self):
         self.animation()
 
     def animation(self):
-        pass
+        self.zombie_list = []
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_1.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_2.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_3.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_4.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_5.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_6.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_7.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_8.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_9.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_10.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_11.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_12.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_13.png"), (166, 144)))
+        self.zombie_list.append(
+            pygame.transform.scale(pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_14.png"), (166, 144)))
+        if self.current_sprite < len(self.zombie_list) - 1:
+            self.current_sprite += 0.1
+        else:
+            self.current_sprite = 0
 
+        for i in zombie_group:
+            if i.rect.x < 50:
+                zombie_group.remove(i)
+            if self.current_sprite < len(self.zombie_list) - 1:
+                self.current_sprite += 0.1
+            else:
+                self.current_sprite = 0
+
+            i.rect.x -= 0.01
+            i.image = self.zombie_list[int(self.current_sprite)]
 
 
 zombie_group = pygame.sprite.Group()
