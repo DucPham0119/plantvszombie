@@ -1,12 +1,13 @@
 import random
+import time
 
 import pygame
 
 pygame.init()
 
 # Set size
-WINDOWN_WIDTH = 1200
-WINDOWN_HEIGHT = 700
+WINDOWN_WIDTH = 1280
+WINDOWN_HEIGHT = 736
 
 display_surface = pygame.display.set_mode((WINDOWN_WIDTH, WINDOWN_HEIGHT))
 pygame.display.set_caption("Game Plant vs Zombie")
@@ -26,18 +27,19 @@ background_rect.topleft = (0, 0)
 class Game():
     """A class to help manage gameplay"""
 
-    def __init__(self, zombie_group):
+    def __init__(self, zombie_group, plant_group):
         """Initialize the game"""
         # Set constant variables
         self.HUD_font = pygame.font.SysFont('calibri', 64)
         self.title_font = pygame.font.SysFont('calibri', 64)
-
+        self.update_count = 0
         # Set game values
         self.score = 0
         self.round_number = 1
         self.frame_count = 0
 
         self.zombie_group = zombie_group
+        self.plant_group = plant_group
 
     def update(self):
         self.add_zombie()
@@ -72,15 +74,11 @@ class Game():
         display_surface.blit(time_text, time_rect)
 
     def add_zombie(self):
-        """Add a zombie to the game"""
-        # Check to add a zombie every second
-        if self.frame_count % FPS == 0:
-            # Only add a zombie if zombie creation time has passed
-            if len(self.zombie_group) < 10:
-                x = random.randint(1000, WINDOWN_WIDTH) + 40
-                y = random.randint(50, WINDOWN_HEIGHT - 100) - 10
-                zombie = Zombie(x, y, "zombie")
-                self.zombie_group.add(zombie)
+        if len(self.zombie_group) <= 10:
+            x = random.randint(1000, WINDOWN_WIDTH) + 40
+            y = random.randint(50, WINDOWN_HEIGHT - 100) - 10
+            zombie = Zombie(x, y, "zombie")
+            self.zombie_group.add(zombie)
 
     def pause_game(self, main_text, sub_text):
         global running
@@ -129,6 +127,7 @@ class Zombie(pygame.sprite.Sprite):
         self.rect.topright = (x, y)
         self.name = name
         self.current_sprite = 0
+        self.die = False
 
     def update(self):
         self.animation()
@@ -182,11 +181,103 @@ class Zombie(pygame.sprite.Sprite):
             i.image = self.zombie_list[int(self.current_sprite)]
 
 
-zombie_group = pygame.sprite.Group()
-# zombie_group.add(Zombie(WINDOWN_WIDTH, WINDOWN_HEIGHT // 2, "zombie"))
+class Pea(pygame.sprite.Sprite):
+    def __init__(self, x, y, name):
+        super().__init__()
 
+        self.name = name
+        self.start_x = x
+        self.start_y = y
+        self.path = "assets/Pea/"
+        self.x_vel = 4
+        self.fly_state = True
+        self.exist = True
+
+    def update(self):
+        self.animation()
+        self.collisionZombie(zombie_group)
+
+    def animation(self):
+        self.rect.x += self.x_vel
+        self.draw(display_surface)
+        if not self.fly_state:
+            self.draw(display_surface)
+            self.exist = False
+            self.kill()
+
+    def draw(self, surface):
+        if self.exist:
+            surface.blit(self.image, self.rect)
+
+    def collisionZombie(self, zombie):
+        pass
+
+    def addPea(self):
+        self.rect.x = self.start_x
+        self.rect.bottom = self.start_y
+        self.image = pygame.image.load("assets/Pea/PeaNormal/PeaNormal_0.png")
+        # self.loadImage(self.name)
+
+    def loadImage(self, name):
+        return pygame.image.load(self.path + str(self.name) + "/" + name)
+
+
+class PeaNormal(Pea):
+    def __init__(self, x, y, name):
+        super().__init__(x, y, name)
+        type_name = self.name + "_0.png"
+        self.image = self.loadImage(type_name)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.bottom = y
+
+    def collisionZombie(self, zombie):
+        if pygame.sprite.spritecollide(self, zombie, False):
+            name = "PeaNormalExplode_0.png"
+            self.image = self.loadImage(name)
+            self.fly_state = False
+
+
+class PeaIce(Pea):
+    def __init__(self, x, y, name):
+        super().__init__(x, y, name)
+        type_name = self.name + "_0.png"
+        self.image = self.loadImage(type_name)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.bottom = y
+
+    def collisionZombie(self, zombie):
+        if pygame.sprite.spritecollide(self, zombie, False):
+            name = "PeaIceExplode_0.gif"
+            self.image = self.loadImage(name)
+            self.fly_state = False
+
+
+class Plant(pygame.sprite.Sprite):
+    def __init__(self, x, y, name, pea_group):
+        super().__init__()
+        self.name = name
+        self.pea = []
+        self.image = pygame.image.load("assets/Plant/Peashooter/Peashooter_0.png")
+        self.rect = self.image.get_rect()
+        self.rect.centerx = x
+        self.rect.bottom = y
+
+    def update(self):
+        self.attacking()
+
+    def attacking(self):
+        self.pea.append(PeaNormal(self.rect.centerx, self.rect.centery, "PeaNormal"))
+        self.pea[0].update()
+
+
+zombie_group = pygame.sprite.Group()
+pea_group = pygame.sprite.Group()
+plant_group = pygame.sprite.Group()
+plant_group.add(Plant(250, 200, "plant", pea_group))
 # Create a game
-my_game = Game(zombie_group)
+my_game = Game(zombie_group, plant_group)
 my_game.pause_game("Zombie Knight", "Press 'Enter' to Begin")
 
 # The main game loop
@@ -203,6 +294,9 @@ while running:
     my_game.update()
     zombie_group.update()
     zombie_group.draw(display_surface)
+    plant_group.update()
+    plant_group.draw(display_surface)
+    # pea_group.update()
     # Update the display and tick the clock
     pygame.display.update()
     clock.tick(FPS)
