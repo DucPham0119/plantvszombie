@@ -27,7 +27,7 @@ background_rect.topleft = (0, 0)
 class Game():
     """A class to help manage gameplay"""
 
-    def __init__(self, zombie_group, plant_group):
+    def __init__(self, zombie_group, plant_group, pea_group):
         """Initialize the game"""
         # Set constant variables
         self.HUD_font = pygame.font.SysFont('calibri', 64)
@@ -40,38 +40,29 @@ class Game():
 
         self.zombie_group = zombie_group
         self.plant_group = plant_group
+        self.pea_group = pea_group
 
     def update(self):
+        self.draw()
         self.add_zombie()
 
     def draw(self):
         """Draw the game HUD"""
         # Set colors
         WHITE = (255, 255, 255)
-        GREEN = (25, 200, 25)
 
         # Set text
         score_text = self.HUD_font.render("Score: " + str(self.score), True, WHITE)
         score_rect = score_text.get_rect()
         score_rect.topleft = (10, WINDOWN_HEIGHT - 50)
 
-        title_text = self.title_font.render("Zombie Knight", True, GREEN)
-        title_rect = title_text.get_rect()
-        title_rect.center = (WINDOWN_WIDTH // 2, WINDOWN_WIDTH - 25)
-
         round_text = self.HUD_font.render("Night: " + str(self.round_number), True, WHITE)
         round_rect = round_text.get_rect()
         round_rect.topright = (WINDOWN_WIDTH - 10, WINDOWN_HEIGHT - 50)
 
-        time_text = self.HUD_font.render("Sunrise In: " + str(self.round_time), True, WHITE)
-        time_rect = time_text.get_rect()
-        time_rect.topright = (WINDOWN_WIDTH - 10, WINDOWN_HEIGHT - 25)
-
         # Draw the HUD
         display_surface.blit(score_text, score_rect)
-        display_surface.blit(title_text, title_rect)
         display_surface.blit(round_text, round_rect)
-        display_surface.blit(time_text, time_rect)
 
     def add_zombie(self):
         if len(self.zombie_group) <= 10:
@@ -265,9 +256,10 @@ class Plant(pygame.sprite.Sprite):
         self.rect.bottom = y
 
     def update(self):
-        self.attacking()
+        self.attacking(zombie_group)
 
-    def attacking(self):
+    def attacking(self, zombie):
+        # if zombie.rect.x < 550 :
         self.pea.append(PeaNormal(self.rect.centerx, self.rect.centery, "PeaNormal"))
         self.pea[0].update()
 
@@ -277,7 +269,7 @@ pea_group = pygame.sprite.Group()
 plant_group = pygame.sprite.Group()
 plant_group.add(Plant(250, 200, "plant", pea_group))
 # Create a game
-my_game = Game(zombie_group, plant_group)
+my_game = Game(zombie_group, plant_group, pea_group)
 my_game.pause_game("Zombie Knight", "Press 'Enter' to Begin")
 
 # The main game loop
