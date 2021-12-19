@@ -28,10 +28,10 @@ class Boostrap():
             display_surface.blit(background_image, background_rect)
             # update and draw sprite group
             my_game.update()
-            my_game.zombie_group.update()
-            my_game.zombie_group.draw(display_surface)
-            my_game.plant_group.update()
-            my_game.plant_group.draw(display_surface)
+            # my_game.zombie_group.update()
+            # my_game.zombie_group.draw(display_surface)
+            # my_game.plant_group.update()
+            # my_game.plant_group.draw(display_surface)
             # pea_group.update()
             # Update the display and tick the clock
             pygame.display.update()

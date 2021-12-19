@@ -22,7 +22,7 @@ class Game():
 
         self.zombie_group = pygame.sprite.Group()
         self.plant_group = pygame.sprite.Group()
-        self.plant_group.add(Plant(250, 200, 'plant'))
+        self.plant_group.add(Plant(250, 200,self.zombie_group))
         self.pea_group = pygame.sprite.Group()
         self.display_surface = display_surface
 
@@ -40,10 +40,22 @@ class Game():
             if item.check_can_remove():
                 self.zombie_group.remove(item)
 
+    def add_plant(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_1]:
+            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
+            if len(list(number_plant_can_move)) == 0:
+                self.plant_group.add(Plant(100, 100,self.zombie_group))
+
     def update(self):
+        self.add_plant()
         self.remove_zombie()
         self.draw()
         self.add_zombie()
+        self.zombie_group.update()
+        self.zombie_group.draw(self.display_surface)
+        self.plant_group.update(self.display_surface)
+        self.plant_group.draw(self.display_surface)
 
     def draw(self):
         """Draw the game HUD"""
