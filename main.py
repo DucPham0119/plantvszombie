@@ -26,7 +26,7 @@ background_rect.topleft = (0, 0)
 class Game():
     """A class to help manage gameplay"""
 
-    def __init__(self, zombie_group):
+    def __init__(self, zombie_group, plant_group):
         """Initialize the game"""
         # Set constant variables
         self.HUD_font = pygame.font.SysFont('calibri', 64)
@@ -36,11 +36,21 @@ class Game():
         self.score = 0
         self.round_number = 1
         self.frame_count = 0
+        self.coin = 50
+
+        # Set value check plant status
+        self.is_check = False
+        self.is_flag = True
 
         self.zombie_group = zombie_group
+        self.plant_group = plant_group
 
     def update(self):
         self.add_zombie()
+        self.add_plant()
+        self.check_plant_status()
+        self.check_collisions()
+
 
     def draw(self):
         """Draw the game HUD"""
@@ -81,6 +91,25 @@ class Game():
                 y = random.randint(50, WINDOWN_HEIGHT - 100) - 10
                 zombie = Zombie(x, y, "zombie")
                 self.zombie_group.add(zombie)
+            pass
+
+    def add_plant(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_1]:
+            if self.is_flag:
+                plant = Plant(100, 100)
+                self.plant_group.add(plant)
+        print(len(self.plant_group))
+
+    def check_collisions(self):
+        if self.is_check:
+            pygame.sprite.groupcollide(self.plant_group, self.zombie_group, False, True)
+
+    def check_plant_status(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            self.is_check = True
 
     def pause_game(self, main_text, sub_text):
         global running
@@ -182,11 +211,92 @@ class Zombie(pygame.sprite.Sprite):
             i.image = self.zombie_list[int(self.current_sprite)]
 
 
+class Plant(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        # self.image = pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_0.png")
+        # self.rect = self.image.get_rect()
+        # self.rect.center = (x,y)
+
+        # Set constant variables
+        self.VELOCITY = 10
+        self.STARTING_HEALTH = 300
+
+        # Set velocity for Plant
+        self.velocity = self.VELOCITY
+
+        # Set value for Plant
+        self.health = self.STARTING_HEALTH
+
+        # Animation frames
+        self.plant_list = []
+
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_0.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_1.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_2.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_3.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_4.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_5.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_6.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_7.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_8.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_9.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_10.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_11.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_12.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_13.png"))
+        self.plant_list.append(pygame.image.load("assets/Plant/RepeaterPea/RepeaterPea_14.png"))
+
+        # Load imgae and get_rect
+        self.current_sprite = 0
+        self.image = self.plant_list[self.current_sprite]
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+        # Animation boolean
+        self.animation_fire = False
+        self.is_animate = False
+
+    def update(self):
+        if self.is_animate:
+            self.animate()
+        else:
+            self.move()
+
+    def animate(self):
+        self.current_sprite += 0.4
+
+        if self.current_sprite >= len(self.plant_list):
+            self.current_sprite = 0
+
+        self.image = self.plant_list[int(self.current_sprite)]
+
+    def move(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT] and self.rect.left > 228:
+            self.rect.x -= self.velocity
+        if keys[pygame.K_RIGHT] and self.rect.right < 900:
+            self.rect.x += self.velocity
+        if keys[pygame.K_UP] and self.rect.top > 100:
+            self.rect.y -= self.velocity
+        if keys[pygame.K_DOWN] and self.rect.bottom < WINDOWN_HEIGHT:
+            self.rect.y += self.velocity
+        if keys[pygame.K_SPACE]:
+            self.is_animate = True
+
+    def fire(self):
+        pass
+
+
+# Create Plant group
+plant_group = pygame.sprite.Group()
 zombie_group = pygame.sprite.Group()
+
 # zombie_group.add(Zombie(WINDOWN_WIDTH, WINDOWN_HEIGHT // 2, "zombie"))
 
 # Create a game
-my_game = Game(zombie_group)
+my_game = Game(zombie_group, plant_group)
 my_game.pause_game("Zombie Knight", "Press 'Enter' to Begin")
 
 # The main game loop
@@ -203,6 +313,9 @@ while running:
     my_game.update()
     zombie_group.update()
     zombie_group.draw(display_surface)
+
+    plant_group.update()
+    plant_group.draw(display_surface)
     # Update the display and tick the clock
     pygame.display.update()
     clock.tick(FPS)
