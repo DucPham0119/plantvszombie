@@ -1,0 +1,41 @@
+import pygame
+
+import constant
+
+
+class Zombie(pygame.sprite.Sprite):
+    def __init__(self, x, y, name):
+        super().__init__()
+        self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
+        self.rect = self.image.get_rect()
+        self.rect.topright = (x, y)
+        self.name = name
+        self.current_sprite = 0
+        self.die = False
+        self.zombie_list = []
+
+        self.init_zombie_list()
+
+    def init_zombie_list(self):
+        for i in range(1, 22):
+            self.zombie_list.append(pygame.transform.scale(
+                pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_" + str(i) + ".png"), (166, 144)))
+
+    def update(self):
+        self.move()
+        self.animation()
+
+    def move(self):
+        self.rect.x -= constant.NUMBER_CHANGE_MOVE_ZOMBIE
+
+    def check_can_remove(self):
+        return self.rect.x < constant.NUMBER_POSITION_CAN_REMOVE_ZOMBIE
+
+    def animation(self):
+
+        if self.current_sprite < len(self.zombie_list) - 1:
+            self.current_sprite += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
+        else:
+            self.current_sprite = 0
+
+        self.image = self.zombie_list[int(self.current_sprite)]
