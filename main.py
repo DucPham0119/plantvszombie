@@ -1,5 +1,4 @@
 import random
-import time
 
 import pygame
 
@@ -24,7 +23,7 @@ background_rect.topleft = (0, 0)
 
 # class Game
 # Define classes
-class Game():
+class Game:
     """A class to help manage gameplay"""
 
     def __init__(self, zombie_group, plant_group, pea_group):
@@ -259,7 +258,6 @@ class Plant(pygame.sprite.Sprite):
         self.attacking(zombie_group)
 
     def attacking(self, zombie):
-        # if zombie.rect.x < 550 :
         self.pea.append(PeaNormal(self.rect.centerx, self.rect.centery, "PeaNormal"))
         self.pea[0].update()
 
