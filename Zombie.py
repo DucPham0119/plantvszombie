@@ -12,7 +12,10 @@ class Zombie(pygame.sprite.Sprite):
         self.name = name
         self.current_sprite = 0
         self.die = False
+        self.damage_focus = 30
         self.zombie_list = []
+        self.healthy = 200
+        self.can_move = True
 
         self.init_zombie_list()
 
@@ -21,12 +24,14 @@ class Zombie(pygame.sprite.Sprite):
             self.zombie_list.append(pygame.transform.scale(
                 pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_" + str(i) + ".png"), (166, 144)))
 
-    def update(self):
+    def update(self, plant):
         self.move()
         self.animation()
+        self.collisionPlant(plant)
 
     def move(self):
-        self.rect.x -= constant.NUMBER_CHANGE_MOVE_ZOMBIE
+        if self.can_move:
+            self.rect.x -= constant.NUMBER_CHANGE_MOVE_ZOMBIE
 
     def check_can_remove(self):
         return self.rect.x < constant.NUMBER_POSITION_CAN_REMOVE_ZOMBIE
@@ -39,3 +44,13 @@ class Zombie(pygame.sprite.Sprite):
             self.current_sprite = 0
 
         self.image = self.zombie_list[int(self.current_sprite)]
+
+    def collisionPlant(self, plant):
+        for item in plant:
+            if pygame.sprite.collide_mask(self, item):
+                self.can_move = False
+                item.health -= self.damage_focus
+                if item.health == 0:
+                    item.remove(plant)
+                    self.can_move = True
+                break

@@ -12,6 +12,7 @@ class Pea(pygame.sprite.Sprite):
         self.x_vel = 4
         self.fly_state = True
         self.exist = True
+        self.damage_focus = 5
 
     def update(self, display_surface, zombie_group):
         self.animation(display_surface)
@@ -26,17 +27,11 @@ class Pea(pygame.sprite.Sprite):
         #     self.kill()
 
     def draw(self, surface):
-        if self.exist:
+        if self.exist :
             surface.blit(self.image, self.rect)
 
     def collisionZombie(self, zombie):
         pass
-
-    def addPea(self):
-        self.rect.x = self.start_x
-        self.rect.bottom = self.start_y
-        self.image = pygame.image.load("assets/Pea/PeaNormal/PeaNormal_0.png")
-        # self.loadImage(self.name)
 
     def loadImage(self, name):
         return pygame.image.load(self.path + str(self.name) + "/" + name)
@@ -52,19 +47,21 @@ class PeaNormal(Pea):
         self.rect.bottom = y
 
     def collisionZombie(self, zombie):
-        # if pygame.sprite.groupcollide(self, zombie, False):
-        #     name = "PeaNormalExplode_0.png"
-        #     self.image = self.loadImage(name)
-        #     # self.kill()
-        #     self.exist = False
-
         for item in zombie:
-            if pygame.sprite.collide_mask(self,item):
-                name = "PeaNormalExplode_0.png"
-                self.image = self.loadImage(name)
+            if pygame.sprite.collide_mask(self, item):
+                if item.healthy > 0:
+                    item.healthy -= self.damage_focus
+                    self.changeImage(item)
+                else:
+                    item.remove(zombie)
                 self.exist = False
-                print(item)
                 break
+
+    def changeImage(self, zombie):
+        if zombie.rect.x >= 250:
+            # print(zombie.rect.x)
+            name = "PeaNormalExplode_0.png"
+            self.image = self.loadImage(name)
 
 
 class PeaIce(Pea):
@@ -77,9 +74,22 @@ class PeaIce(Pea):
         self.rect.bottom = y
 
     def collisionZombie(self, zombie):
-        if pygame.sprite.collide_rect(self, zombie, False):
+        # if pygame.sprite.collide_rect(self, zombie):
+        #     name = "PeaIceExplode_0.gif"
+        #     self.image = self.loadImage(name)
+        #     self.fly_state = False
+        for item in zombie:
+            if pygame.sprite.collide_mask(self, item):
+                if item.healthy > 0:
+                    item.healthy -= self.damage_focus
+                    self.changeImage(item)
+                else:
+                    item.remove(zombie)
+                self.exist = False
+                break
+
+    def changeImage(self, zombie):
+        if zombie.rect.x >= 250:
+            # print(zombie.rect.x)
             name = "PeaIceExplode_0.gif"
             self.image = self.loadImage(name)
-            self.fly_state = False
-
-

@@ -2,11 +2,11 @@ import constant
 import random
 import pygame
 
-from Plant import Plant
+from Plant import  RepeaterPea, SnowPea, Threepeater
 from Zombie import Zombie
 
 
-class Game():
+class Game:
     """A class to help manage gameplay"""
 
     def __init__(self, display_surface):
@@ -22,7 +22,7 @@ class Game():
 
         self.zombie_group = pygame.sprite.Group()
         self.plant_group = pygame.sprite.Group()
-        self.plant_group.add(Plant(250, 200,self.zombie_group))
+        self.plant_group.add(RepeaterPea(250, 200, "RepeaterPea", self.zombie_group))
         self.pea_group = pygame.sprite.Group()
         self.display_surface = display_surface
 
@@ -42,34 +42,44 @@ class Game():
 
     def add_plant(self):
         keys = pygame.key.get_pressed()
+        # if keys[pygame.K_1]:
+        #     number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
+        #     if len(list(number_plant_can_move)) == 0:
+        #         self.plant_group.add(Peashooter(100, 100, "Peashooter", self.zombie_group))
         if keys[pygame.K_1]:
             number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
             if len(list(number_plant_can_move)) == 0:
-                self.plant_group.add(Plant(100, 100,self.zombie_group))
+                self.plant_group.add(RepeaterPea(100, 100, "RepeaterPea", self.zombie_group))
+        if keys[pygame.K_2]:
+            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
+            if len(list(number_plant_can_move)) == 0:
+                self.plant_group.add(SnowPea(100, 100, "SnowPea", self.zombie_group))
+        if keys[pygame.K_3]:
+            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
+            if len(list(number_plant_can_move)) == 0:
+                self.plant_group.add(Threepeater(100, 100, "Threepeater", self.zombie_group))
 
     def update(self):
         self.add_plant()
         self.remove_zombie()
         self.draw()
         self.add_zombie()
-        self.zombie_group.update()
+        self.zombie_group.update(self.plant_group)
         self.zombie_group.draw(self.display_surface)
         self.plant_group.update(self.display_surface)
         self.plant_group.draw(self.display_surface)
 
     def draw(self):
         """Draw the game HUD"""
-        # Set colors
-        WHITE = (255, 255, 255)
 
         # Set text
-        score_text = self.HUD_font.render("Score: " + str(self.score), True, WHITE)
+        score_text = self.HUD_font.render("Score: " + str(self.score), True, constant.WHITE)
         score_rect = score_text.get_rect()
         score_rect.topleft = (10, constant.WINDOW_HEIGHT - 50)
 
-        round_text = self.HUD_font.render("Night: " + str(self.round_number), True, WHITE)
+        round_text = self.HUD_font.render("Night: " + str(self.round_number), True, constant.WHITE)
         round_rect = round_text.get_rect()
-        round_rect.topright = (constant.WINDOW_HEIGHT - 10, constant.WINDOW_HEIGHT - 50)
+        round_rect.topright = (constant.WINDOW_WIDTH - 10, constant.WINDOW_HEIGHT - 50)
 
         # Draw the HUD
         self.display_surface.blit(score_text, score_rect)
@@ -85,23 +95,18 @@ class Game():
     def pause_game(self, main_text, sub_text):
         global running
 
-        # Set colors
-        WHITE = (255, 255, 255)
-        BLACK = (0, 0, 0)
-        GREEN = (25, 200, 25)
-
         # Create main pause text
-        main_text = self.title_font.render(main_text, True, GREEN)
+        main_text = self.title_font.render(main_text, True, constant.GREEN)
         main_rect = main_text.get_rect()
         main_rect.center = (constant.WINDOW_WIDTH // 2, constant.WINDOW_HEIGHT // 2)
 
         # Create sub pause text
-        sub_text = self.title_font.render(sub_text, True, WHITE)
+        sub_text = self.title_font.render(sub_text, True, constant.WHITE)
         sub_rect = sub_text.get_rect()
         sub_rect.center = (constant.WINDOW_WIDTH // 2, constant.WINDOW_HEIGHT // 2 + 64)
 
         # Display the pause text
-        self.display_surface.fill(BLACK)
+        self.display_surface.fill(constant.BLACK)
         self.display_surface.blit(main_text, main_rect)
         self.display_surface.blit(sub_text, sub_rect)
         pygame.display.update()

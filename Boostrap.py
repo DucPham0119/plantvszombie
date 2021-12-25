@@ -11,7 +11,7 @@ class Boostrap():
         pygame.display.set_caption("Game Plant vs Zombie")
         fps = 60
         clock = pygame.time.Clock()
-        background_image = pygame.transform.scale(pygame.image.load("assets/Background/Background_1.jpg"), (1280, 736))
+        background_image = pygame.transform.scale(pygame.image.load("assets/Background/Background_1.jpg"), (1400, 600))
         background_rect = background_image.get_rect()
         background_rect.topleft = (0, 0)
 
