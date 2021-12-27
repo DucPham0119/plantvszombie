@@ -21,6 +21,15 @@ class Boostrap():
         while running:
             # Check to see if the user wants to quit
             for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RIGHT:
+                        my_game.move_plant("right")
+                    if event.key == pygame.K_LEFT:
+                        my_game.move_plant("left")
+                    if event.key == pygame.K_DOWN:
+                        my_game.move_plant('down')
+                    if event.key == pygame.K_UP:
+                        my_game.move_plant('up')
                 if event.type == pygame.QUIT:
                     running = False
 

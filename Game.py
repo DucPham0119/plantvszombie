@@ -22,7 +22,7 @@ class Game:
 
         self.zombie_group = pygame.sprite.Group()
         self.plant_group = pygame.sprite.Group()
-        self.plant_group.add(RepeaterPea(250, 200, "RepeaterPea", self.zombie_group))
+        self.plant_group.add(RepeaterPea(0, 0, "RepeaterPea", self.zombie_group))
         self.pea_group = pygame.sprite.Group()
         self.display_surface = display_surface
 
@@ -92,6 +92,13 @@ class Game:
             zombie = Zombie(x, line, "zombie")
             self.zombie_group.add(zombie)
 
+    def move_plant(self,type):
+        for item in self.plant_group:
+            if item.can_move:
+                item.update_move(type)
+        # plant.update_move(type)
+
+
     def pause_game(self, main_text, sub_text):
         global running
 
@@ -123,3 +130,5 @@ class Game:
                 if event.type == pygame.QUIT:
                     is_paused = False
                     running = False
+
+
