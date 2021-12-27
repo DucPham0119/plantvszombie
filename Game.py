@@ -2,6 +2,8 @@ import constant
 import random
 import pygame
 
+from Car import Car
+from Pea import PeaNormal
 from Plant import RepeaterPea, SnowPea, Threepeater
 from Zombie import Zombie
 
@@ -24,6 +26,7 @@ class Game:
         self.plant_group = pygame.sprite.Group()
         self.plant_group.add(RepeaterPea(0, 0, "RepeaterPea", self.zombie_group))
         self.pea_group = pygame.sprite.Group()
+        self.car_group = pygame.sprite.Group()
         self.display_surface = display_surface
 
     def get_zombie_group(self):
@@ -42,32 +45,38 @@ class Game:
 
     def add_plant(self):
         keys = pygame.key.get_pressed()
-        # if keys[pygame.K_1]:
-        #     number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
-        #     if len(list(number_plant_can_move)) == 0:
-        #         self.plant_group.add(Peashooter(100, 100, "Peashooter", self.zombie_group))
+        pos_x = random.randint(0, 4)
+        pos_y = random.randint(0, 8)
         if keys[pygame.K_1]:
             number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
             if len(list(number_plant_can_move)) == 0:
-                self.plant_group.add(RepeaterPea(100, 100, "RepeaterPea", self.zombie_group))
+                self.plant_group.add(RepeaterPea(pos_x, pos_y, "RepeaterPea", self.zombie_group))
         if keys[pygame.K_2]:
             number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
             if len(list(number_plant_can_move)) == 0:
-                self.plant_group.add(SnowPea(100, 100, "SnowPea", self.zombie_group))
+                self.plant_group.add(SnowPea(pos_x, pos_y, "SnowPea", self.zombie_group))
         if keys[pygame.K_3]:
             number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
             if len(list(number_plant_can_move)) == 0:
-                self.plant_group.add(Threepeater(100, 100, "Threepeater", self.zombie_group))
+                self.plant_group.add(Threepeater(pos_x, pos_y, "Threepeater", self.zombie_group))
 
     def update(self):
+        self.setupCars()
         self.add_plant()
         self.remove_zombie()
         self.draw()
-        # self.add_zombie()
+        self.add_zombie()
         self.zombie_group.update(self.plant_group)
         self.zombie_group.draw(self.display_surface)
         self.plant_group.update(self.display_surface)
         self.plant_group.draw(self.display_surface)
+        self.car_group.update(self.zombie_group)
+        self.car_group.draw(self.display_surface)
+        # self.checkCarCollisions()
+
+    def setupCars(self):
+        for i in range(5):
+            self.car_group.add(Car(190, i))
 
     def draw(self):
         """Draw the game HUD"""
@@ -92,12 +101,22 @@ class Game:
             zombie = Zombie(x, line, "zombie")
             self.zombie_group.add(zombie)
 
-    def move_plant(self,type):
+    def move_plant(self, type):
         for item in self.plant_group:
             if item.can_move:
                 item.update_move(type)
         # plant.update_move(type)
 
+    def checkCarCollisions(self):
+        collided_func = pygame.sprite.collide_circle_ratio(0.8)
+        for car in self.car_group:
+            zombies = pygame.sprite.spritecollide(car, self.zombie_group, False, collided_func)
+            for zombie in zombies:
+                # if zombie and zombie.state != c.DIE:
+                car.setWalk()
+                # zombie.setDie()
+            if car.dead:
+                self.car_group.remove(car)
 
     def pause_game(self, main_text, sub_text):
         global running
@@ -130,5 +149,3 @@ class Game:
                 if event.type == pygame.QUIT:
                     is_paused = False
                     running = False
-
-

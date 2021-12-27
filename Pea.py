@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 
@@ -13,18 +15,18 @@ class Pea(pygame.sprite.Sprite):
         self.fly_state = True
         self.exist = True
         self.damage_focus = 5
+        self.current_time = 0
 
     def update(self, display_surface, zombie_group):
         self.animation(display_surface)
         self.collisionZombie(zombie_group)
+        if not self.fly_state:
+            if (self.current_time - self.explode_timer) > 300:
+                self.kill()
 
     def animation(self, display_surface):
         self.rect.x += self.x_vel
         self.draw(display_surface)
-        # if not self.fly_state:
-        #     self.draw(display_surface)
-        #     self.exist = False
-        #     self.kill()
 
     def draw(self, surface):
         if self.exist:
@@ -47,21 +49,22 @@ class PeaNormal(Pea):
         self.rect.bottom = y
 
     def collisionZombie(self, zombie):
+        self.current_time = time.time_ns()
         for item in zombie:
             if pygame.sprite.collide_mask(self, item):
                 if item.healthy > 0:
                     item.healthy -= self.damage_focus
-                    self.changeImage(item)
+                    self.setExplode()
+                    self.fly_state = False
                 else:
                     item.remove(zombie)
                 self.exist = False
                 break
 
-    def changeImage(self, zombie):
-        if zombie.rect.x >= 250:
-            # print(zombie.rect.x)
-            name = "PeaNormalExplode_0.png"
-            self.image = self.loadImage(name)
+    def setExplode(self):
+        self.explode_timer = time.time_ns()
+        name = "PeaNormalExplode_0.png"
+        self.image = self.loadImage(name)
 
 
 class PeaIce(Pea):
@@ -74,22 +77,19 @@ class PeaIce(Pea):
         self.rect.bottom = y
 
     def collisionZombie(self, zombie):
-        # if pygame.sprite.collide_rect(self, zombie):
-        #     name = "PeaIceExplode_0.gif"
-        #     self.image = self.loadImage(name)
-        #     self.fly_state = False
+        self.current_time = time.time_ns()
         for item in zombie:
             if pygame.sprite.collide_mask(self, item):
                 if item.healthy > 0:
                     item.healthy -= self.damage_focus
                     self.changeImage(item)
+                    self.fly_state = False
                 else:
                     item.remove(zombie)
                 self.exist = False
                 break
 
-    def changeImage(self, zombie):
-        if zombie.rect.x >= 250:
-            # print(zombie.rect.x)
-            name = "PeaIceExplode_0.gif"
-            self.image = self.loadImage(name)
+    def setExplode(self):
+        self.explode_timer = time.time_ns()
+        name = "PeaIceExplode_0.gif"
+        self.image = self.loadImage(name)

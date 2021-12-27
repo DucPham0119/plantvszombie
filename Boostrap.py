@@ -30,6 +30,8 @@ class Boostrap():
                         my_game.move_plant('down')
                     if event.key == pygame.K_UP:
                         my_game.move_plant('up')
+                    if event.key == pygame.K_SPACE:
+                        my_game.move_plant('space')
                 if event.type == pygame.QUIT:
                     running = False
 
