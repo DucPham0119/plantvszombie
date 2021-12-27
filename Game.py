@@ -2,7 +2,7 @@ import constant
 import random
 import pygame
 
-from Plant import  RepeaterPea, SnowPea, Threepeater
+from Plant import RepeaterPea, SnowPea, Threepeater
 from Zombie import Zombie
 
 
@@ -63,7 +63,7 @@ class Game:
         self.add_plant()
         self.remove_zombie()
         self.draw()
-        self.add_zombie()
+        # self.add_zombie()
         self.zombie_group.update(self.plant_group)
         self.zombie_group.draw(self.display_surface)
         self.plant_group.update(self.display_surface)
@@ -88,8 +88,8 @@ class Game:
     def add_zombie(self):
         if len(self.zombie_group) <= 10:
             x = random.randint(1000, constant.WINDOW_WIDTH) + 40
-            y = random.randint(50, constant.WINDOW_HEIGHT - 100) - 10
-            zombie = Zombie(x, y, "zombie")
+            line = random.randint(0, 4)
+            zombie = Zombie(x, line, "zombie")
             self.zombie_group.add(zombie)
 
     def pause_game(self, main_text, sub_text):

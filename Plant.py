@@ -28,7 +28,7 @@ class Plant(pygame.sprite.Sprite):
         self.image = self.plant_list[self.current_sprite]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-
+        # self.line = (self.rect.y - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y + 1
         # Animation boolean
         self.animation_fire = False
         self.is_animate = False
@@ -47,7 +47,6 @@ class Plant(pygame.sprite.Sprite):
             return
         # self.check_fly(display_surface, zombie)
         if not self.peas.sprite.exist:
-            print("x")
             self.fire(display_surface)
             # self.check_fly(display_surface, zombie)
         pass
@@ -56,11 +55,12 @@ class Plant(pygame.sprite.Sprite):
         for item in zombie:
             if item.rect.x <= 200:
                 self.fly = True
-                print(item.rect.x)
+                # print(item.rect.x)
             if self.fly:
                 self.fire(display_surface)
 
     def update(self, display_surface):
+        # self.map()
         self.peas.update(display_surface, self.zombie_group)
         self.check_fire(display_surface)
         if self.is_animate:
@@ -81,17 +81,39 @@ class Plant(pygame.sprite.Sprite):
 
         if keys[pygame.K_LEFT] and self.rect.left > 228:
             self.rect.x -= self.velocity
-        if keys[pygame.K_RIGHT] and self.rect.right < 900:
+        if keys[pygame.K_RIGHT] and self.rect.right < 980:
             self.rect.x += self.velocity
         if keys[pygame.K_UP] and self.rect.top > 100:
             self.rect.y -= self.velocity
-        if keys[pygame.K_DOWN] and self.rect.bottom < constant.WINDOW_HEIGHT:
+        if keys[pygame.K_DOWN] and self.rect.bottom < constant.WINDOW_HEIGHT - 50:
             self.rect.y += self.velocity
         if keys[pygame.K_SPACE]:
             self.is_animate = True
             self.can_move = False
+            self.map()
+            # print(self.rect.x)
+            # print(self.col)
             self.fire(display_surface)
             # self.check_fly(display_surface, self.zombie_group)
+
+    def map(self):
+        self.line = (self.rect.midbottom[1] - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y + 1
+        self.col = round((self.rect.midbottom[0] - constant.START_X - 5*constant.COL_X // 6) // constant.COL_X)
+        print(self.line, self.col)
+        if self.col == -1:
+            self.col = 0
+        if self.col <= 8:
+            self.col += 1
+        print("line, col: ", self.line, self.col)
+        x = (self.col - 1) * constant.COL_X + constant.COL_X + constant.START_X
+        y = (self.line - 1) * constant.LINE_Y + constant.LINE_Y + constant.START_Y
+        # print("x,y: ", x, y)
+        if self.col >= 7:
+            self.rect.midbottom = (x + 65, y)
+        elif self.col >= 4:
+            self.rect.midbottom = (x + 36, y)
+        else:
+            self.rect.midbottom = (x + 5, y)
 
     def fire(self, display_surface):
         pass

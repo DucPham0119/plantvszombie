@@ -27,7 +27,7 @@ class Pea(pygame.sprite.Sprite):
         #     self.kill()
 
     def draw(self, surface):
-        if self.exist :
+        if self.exist:
             surface.blit(self.image, self.rect)
 
     def collisionZombie(self, zombie):

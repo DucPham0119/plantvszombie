@@ -4,10 +4,12 @@ import constant
 
 
 class Zombie(pygame.sprite.Sprite):
-    def __init__(self, x, y, name):
+    def __init__(self, x, line, name):
         super().__init__()
         self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
         self.rect = self.image.get_rect()
+        self.line = line
+        y = constant.START_Y + (self.line - 1) * constant.LINE_Y + constant.LINE_Y // 2
         self.rect.topright = (x, y)
         self.name = name
         self.current_sprite = 0
