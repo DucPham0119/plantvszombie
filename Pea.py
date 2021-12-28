@@ -21,7 +21,7 @@ class Pea(pygame.sprite.Sprite):
         self.animation(display_surface)
         self.collisionZombie(zombie_group)
         if not self.fly_state:
-            if (self.current_time - self.explode_timer) > 300:
+            if (self.current_time - self.explode_timer) > 100:
                 self.kill()
 
     def animation(self, display_surface):
@@ -52,8 +52,8 @@ class PeaNormal(Pea):
         self.current_time = time.time_ns()
         for item in zombie:
             if pygame.sprite.collide_mask(self, item):
-                if item.healthy > 0:
-                    item.healthy -= self.damage_focus
+                if item.health > 0:
+                    item.health -= self.damage_focus
                     self.setExplode()
                     self.fly_state = False
                 else:
@@ -80,8 +80,8 @@ class PeaIce(Pea):
         self.current_time = time.time_ns()
         for item in zombie:
             if pygame.sprite.collide_mask(self, item):
-                if item.healthy > 0:
-                    item.healthy -= self.damage_focus
+                if item.health > 0:
+                    item.health -= self.damage_focus
                     self.changeImage(item)
                     self.fly_state = False
                 else:

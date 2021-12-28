@@ -45,8 +45,10 @@ class Game:
 
     def add_plant(self):
         keys = pygame.key.get_pressed()
-        pos_x = random.randint(0, 4)
-        pos_y = random.randint(0, 8)
+        # pos_x = random.randint(0, 4)
+        # pos_y = random.randint(0, 8)
+        pos_x = 150
+        pos_y = 370
         if keys[pygame.K_1]:
             number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
             if len(list(number_plant_can_move)) == 0:
@@ -66,7 +68,8 @@ class Game:
         self.remove_zombie()
         self.draw()
         self.add_zombie()
-        self.zombie_group.update(self.plant_group)
+        self.zombie_group.update()
+        # self.zombie_group.update(self.plant_group)
         self.zombie_group.draw(self.display_surface)
         self.plant_group.update(self.display_surface)
         self.plant_group.draw(self.display_surface)
@@ -98,7 +101,7 @@ class Game:
         if len(self.zombie_group) <= 10:
             x = random.randint(1000, constant.WINDOW_WIDTH) + 40
             line = random.randint(0, 4)
-            zombie = Zombie(x, line, "zombie")
+            zombie = Zombie(x, line, "zombie", 30)
             self.zombie_group.add(zombie)
 
     def move_plant(self, type):
@@ -106,6 +109,12 @@ class Game:
             if item.can_move:
                 item.update_move(type)
         # plant.update_move(type)
+
+    def pos_plant(self, mouse_pos):
+        
+        for item in self.plant_group:
+            if item.can_move:
+                item.mouse_pos_plant(mouse_pos)
 
     def checkCarCollisions(self):
         collided_func = pygame.sprite.collide_circle_ratio(0.8)

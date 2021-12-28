@@ -28,7 +28,7 @@ class Plant(pygame.sprite.Sprite):
         self.current_sprite = 0
         self.image = self.plant_list[self.current_sprite]
         self.rect = self.image.get_rect()
-
+        self.rect.center = (x,y)
         # Animation boolean
         self.animation_fire = False
         self.is_animate = False
@@ -42,7 +42,7 @@ class Plant(pygame.sprite.Sprite):
         self.location_x = x
         self.location_y = y
 
-        self.update_position()
+        # self.update_position()
 
     # def dark_img(self):
     #     if not self.is_animate:
@@ -129,6 +129,21 @@ class Plant(pygame.sprite.Sprite):
         if type == "space" and check_map[self.location_x][self.location_y] == 0:
             self.is_animate = True
             self.can_move = False
+            check_map[self.location_x][self.location_y] = 1
+
+    def mouse_pos_plant(self, mouse_pos):
+        pos_x = (mouse_pos[1] - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y
+        pos_y = round((mouse_pos[0] - constant.START_X - 5 * constant.COL_X // 6) // constant.COL_X)
+        if pos_x == -1:
+            pos_x = 0
+        if pos_y == -1:
+            pos_y = 0
+        self.location_x = pos_x
+        self.location_y = pos_y
+        if check_map[self.location_x][self.location_y] == 0:
+            self.is_animate = True
+            self.can_move = False
+            self.update_position()
             check_map[self.location_x][self.location_y] = 1
 
     # def map(self):

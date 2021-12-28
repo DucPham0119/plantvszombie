@@ -4,7 +4,7 @@ import constant
 from Game import Game
 
 
-class Boostrap():
+class Boostrap:
     def run(self):
         pygame.init()
         display_surface = pygame.display.set_mode((constant.WINDOW_WIDTH, constant.WINDOW_HEIGHT))
@@ -32,6 +32,18 @@ class Boostrap():
                         my_game.move_plant('up')
                     if event.key == pygame.K_SPACE:
                         my_game.move_plant('space')
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    print(mouse_pos)
+                    # row = (mouse_pos[1] - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y
+                    # col = round((mouse_pos[0] - constant.START_X - 5 * constant.COL_X // 6) // constant.COL_X)
+                    # if row == -1:
+                    #     row = 0
+                    # if col == -1:
+                    #     col = 0
+                    # print(row, col)
+                    my_game.pos_plant(mouse_pos)
+
                 if event.type == pygame.QUIT:
                     running = False
 
