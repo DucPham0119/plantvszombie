@@ -260,7 +260,7 @@
 #     def update(self):
 #         if self.is_animate:
 #             self.animate()
-#         else:
+#         else:3
 #             self.move()
 #
 #     def animate(self):

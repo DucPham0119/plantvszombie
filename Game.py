@@ -6,6 +6,7 @@ from Car import Car
 from Pea import PeaNormal
 from Plant import RepeaterPea, SnowPea, Threepeater
 from Zombie import Zombie
+from ZombieHead import ZombieHead
 
 
 class Game:
@@ -22,11 +23,15 @@ class Game:
         self.round_number = 1
         self.frame_count = 0
 
+        self.is_check = 0
+
         self.zombie_group = pygame.sprite.Group()
         self.plant_group = pygame.sprite.Group()
         self.plant_group.add(RepeaterPea(0, 0, "RepeaterPea", self.zombie_group))
         self.pea_group = pygame.sprite.Group()
         self.car_group = pygame.sprite.Group()
+        self.zombie_head_group = pygame.sprite.Group()
+
         self.display_surface = display_surface
 
     def get_zombie_group(self):
@@ -66,12 +71,16 @@ class Game:
         self.remove_zombie()
         self.draw()
         self.add_zombie()
+        # self.check_lost_head()
         self.zombie_group.update(self.plant_group)
         self.zombie_group.draw(self.display_surface)
         self.plant_group.update(self.display_surface)
         self.plant_group.draw(self.display_surface)
         self.car_group.update(self.zombie_group)
         self.car_group.draw(self.display_surface)
+
+        # self.zombie_head_group.draw(self.display_surface)
+        # self.zombie_head_group.update()
         # self.checkCarCollisions()
 
     def setupCars(self):
@@ -98,8 +107,24 @@ class Game:
         if len(self.zombie_group) <= 10:
             x = random.randint(1000, constant.WINDOW_WIDTH) + 40
             line = random.randint(0, 4)
-            zombie = Zombie(x, line, "zombie")
+            # zombie_head = ZombieHead(x,line)
+            # self.setLostHead(zombie_head)
+            zombie = Zombie(x, line, "zombie", self.zombie_head_group)
             self.zombie_group.add(zombie)
+
+    # set zombie lost head
+
+    # def setLostHead(self, zombie_head):
+    #     if len(self.zombie_head_group) < 1:
+    #         self.zombie_head_group.add(zombie_head)
+
+    # def check_lost_head(self):
+    #     if self.is_check < 100:
+    #         self.setLostHead()
+    #         self.is_check += 1
+    #     else:
+    #         for zombie in self.zombie_head_group:
+    #             self.zombie_head_group.remove(zombie)
 
     def move_plant(self, type):
         for item in self.plant_group:
