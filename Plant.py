@@ -28,7 +28,7 @@ class Plant(pygame.sprite.Sprite):
         self.current_sprite = 0
         self.image = self.plant_list[self.current_sprite]
         self.rect = self.image.get_rect()
-        self.rect.center = (x,y)
+        self.rect.center = (x, y)
         # Animation boolean
         self.animation_fire = False
         self.is_animate = False
@@ -41,14 +41,6 @@ class Plant(pygame.sprite.Sprite):
 
         self.location_x = x
         self.location_y = y
-
-        # self.update_position()
-
-    # def dark_img(self):
-    #     if not self.is_animate:
-    #         dark = pygame.Surface((self.image.get_width(), self.image.get_height()), flags=pygame.SRCALPHA)
-    #         dark.fill((50, 50, 50, 0))
-    #         self.image.blit(dark, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
 
     def init_plant_list(self):
         pass
@@ -75,36 +67,6 @@ class Plant(pygame.sprite.Sprite):
 
         self.image = self.plant_list[int(self.current_sprite)]
 
-    # def move(self, display_surface):
-    #     return False
-    #     keys = pygame.key.get_pressed()
-    #
-    #     if keys[pygame.K_LEFT] and self.rect.left > 228:
-    #         # self.rect.x -= self.velocity
-    #         self.location_y = self.location_y - 1
-    #         self.update_position()
-    #     if keys[pygame.K_RIGHT] and self.rect.right < 980:
-    #         # self.rect.x += self.velocity
-    #         print("right")
-    #         self.location_y = self.location_y + 1
-    #         self.update_position()
-    #     if keys[pygame.K_UP] and self.rect.top > 100:
-    #         # self.rect.y -= self.velocity
-    #         self.location_x = self.location_x - 1
-    #         self.update_position()
-    #     if keys[pygame.K_DOWN] and self.rect.bottom < constant.WINDOW_HEIGHT - 50:
-    #         # self.rect.y += self.velocity
-    #         self.location_x = self.location_x + 1
-    #         self.update_position()
-    #     if keys[pygame.K_SPACE]:
-    #         self.is_animate = True
-    #         self.can_move = False
-    #         self.map()
-    #         # print(self.rect.x)
-    #         # print(self.col)
-    #         self.fire(display_surface)
-    #         # self.check_fly(display_surface, self.zombie_group)
-
     def checkPea(self, display_surface, zombie):
         self.line = (self.rect.y - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y + 1
         for item in zombie:
@@ -114,22 +76,22 @@ class Plant(pygame.sprite.Sprite):
                 if len(self.peas) != 0:
                     self.peas.draw(display_surface)
 
-    def update_move(self, type):
-        if type == 'right' and self.location_y < 8:
-            self.location_y += 1
-        if type == 'left' and self.location_y > 0:
-            self.location_y -= 1
-        if type == 'up' and self.location_x > 0:
-            self.location_x -= 1
-        if type == 'down' and self.location_x < 4:
-            self.location_x += 1
-
-        self.update_position()
-
-        if type == "space" and check_map[self.location_x][self.location_y] == 0:
-            self.is_animate = True
-            self.can_move = False
-            check_map[self.location_x][self.location_y] = 1
+    # def update_move(self, type):
+    #     if type == 'right' and self.location_y < 8:
+    #         self.location_y += 1
+    #     if type == 'left' and self.location_y > 0:
+    #         self.location_y -= 1
+    #     if type == 'up' and self.location_x > 0:
+    #         self.location_x -= 1
+    #     if type == 'down' and self.location_x < 4:
+    #         self.location_x += 1
+    #
+    #     self.update_position()
+    #
+    #     if type == "space" and check_map[self.location_x][self.location_y] == 0:
+    #         self.is_animate = True
+    #         self.can_move = False
+    #         check_map[self.location_x][self.location_y] = 1
 
     def mouse_pos_plant(self, mouse_pos):
         pos_x = (mouse_pos[1] - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y
@@ -145,25 +107,6 @@ class Plant(pygame.sprite.Sprite):
             self.can_move = False
             self.update_position()
             check_map[self.location_x][self.location_y] = 1
-
-    # def map(self):
-    #     self.line = (self.rect.y - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y + 1
-    #     self.col = round((self.rect.midbottom[0] - constant.START_X - 5 * constant.COL_X // 6) // constant.COL_X)
-    #     print(self.line, self.col)
-    #     if self.col == -1:
-    #         self.col = 0
-    #     if self.col <= 8:
-    #         self.col += 1
-    #     print("line, col: ", self.line, self.col)
-    #     x = (self.col - 1) * constant.COL_X + constant.COL_X + constant.START_X
-    #     y = (self.line - 1) * constant.LINE_Y + constant.LINE_Y + constant.START_Y
-    #     # print("x,y: ", x, y)
-    #     if self.col >= 7:
-    #         self.rect.midbottom = (x + 65, y)
-    #     elif self.col >= 4:
-    #         self.rect.midbottom = (x + 36, y)
-    #     else:
-    #         self.rect.midbottom = (x + 5, y)
 
     def fire(self):
         pass

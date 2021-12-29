@@ -3,8 +3,8 @@ import random
 import pygame
 
 from Car import Car
-from Pea import PeaNormal
 from Plant import RepeaterPea, SnowPea, Threepeater
+from Sun import Sun
 from Zombie import Zombie
 
 
@@ -14,6 +14,7 @@ class Game:
     def __init__(self, display_surface):
         """Initialize the game"""
         # Set constant variables
+        self.time = pygame.time.get_ticks()
         self.HUD_font = pygame.font.SysFont('calibri', 64)
         self.title_font = pygame.font.SysFont('calibri', 64)
         self.update_count = 0
@@ -24,10 +25,12 @@ class Game:
 
         self.zombie_group = pygame.sprite.Group()
         self.plant_group = pygame.sprite.Group()
-        self.plant_group.add(RepeaterPea(0, 0, "RepeaterPea", self.zombie_group))
+        # self.plant_group.add(RepeaterPea(0, 0, "RepeaterPea", self.zombie_group))
         self.pea_group = pygame.sprite.Group()
         self.car_group = pygame.sprite.Group()
+        self.sun_group = pygame.sprite.Group()
         self.display_surface = display_surface
+        self.can_pos_plant = False
 
     def get_zombie_group(self):
         return self.zombie_group
@@ -38,31 +41,8 @@ class Game:
     def get_pea_group(self):
         return self.pea_group
 
-    def remove_zombie(self):
-        for item in self.zombie_group:
-            if item.check_can_remove():
-                self.zombie_group.remove(item)
-
-    def add_plant(self):
-        keys = pygame.key.get_pressed()
-        # pos_x = random.randint(0, 4)
-        # pos_y = random.randint(0, 8)
-        pos_x = 150
-        pos_y = 370
-        if keys[pygame.K_1]:
-            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
-            if len(list(number_plant_can_move)) == 0:
-                self.plant_group.add(RepeaterPea(pos_x, pos_y, "RepeaterPea", self.zombie_group))
-        if keys[pygame.K_2]:
-            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
-            if len(list(number_plant_can_move)) == 0:
-                self.plant_group.add(SnowPea(pos_x, pos_y, "SnowPea", self.zombie_group))
-        if keys[pygame.K_3]:
-            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
-            if len(list(number_plant_can_move)) == 0:
-                self.plant_group.add(Threepeater(pos_x, pos_y, "Threepeater", self.zombie_group))
-
     def update(self):
+        self.add_sun()
         self.setupCars()
         self.add_plant()
         self.remove_zombie()
@@ -75,11 +55,9 @@ class Game:
         self.plant_group.draw(self.display_surface)
         self.car_group.update(self.zombie_group)
         self.car_group.draw(self.display_surface)
+        self.sun_group.update()
+        self.sun_group.draw(self.display_surface)
         # self.checkCarCollisions()
-
-    def setupCars(self):
-        for i in range(5):
-            self.car_group.add(Car(190, i))
 
     def draw(self):
         """Draw the game HUD"""
@@ -97,24 +75,70 @@ class Game:
         self.display_surface.blit(score_text, score_rect)
         self.display_surface.blit(round_text, round_rect)
 
+    def add_plant(self):
+        keys = pygame.key.get_pressed()
+        # pos_x = random.randint(0, 4)
+        # pos_y = random.randint(0, 8)
+        pos_x = 150
+        pos_y = 370
+        if keys[pygame.K_1]:
+            self.can_pos_plant = True
+            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
+            if len(list(number_plant_can_move)) == 0:
+                self.plant_group.add(RepeaterPea(pos_x, pos_y, "RepeaterPea", self.zombie_group))
+        if keys[pygame.K_2]:
+            self.can_pos_plant = True
+            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
+            if len(list(number_plant_can_move)) == 0:
+                self.plant_group.add(SnowPea(pos_x, pos_y, "SnowPea", self.zombie_group))
+        if keys[pygame.K_3]:
+            self.can_pos_plant = True
+            number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
+            if len(list(number_plant_can_move)) == 0:
+                self.plant_group.add(Threepeater(pos_x, pos_y, "Threepeater", self.zombie_group))
+
+    def add_sun(self):
+        if pygame.time.get_ticks() - self.time >= 5000:
+            x = random.randint(200, 900)
+            des_y = random.randint(200, 550)
+            self.sun_group.add(Sun(x, 0, des_y))
+
     def add_zombie(self):
-        if len(self.zombie_group) <= 10:
+        if pygame.time.get_ticks() - self.time >= 5000:
+            self.time = pygame.time.get_ticks()
             x = random.randint(1000, constant.WINDOW_WIDTH) + 40
             line = random.randint(0, 4)
-            zombie = Zombie(x, line, "zombie", 30)
+            zombie = Zombie(x, line, "zombie", 30, self.sun_group)
             self.zombie_group.add(zombie)
 
-    def move_plant(self, type):
-        for item in self.plant_group:
-            if item.can_move:
-                item.update_move(type)
-        # plant.update_move(type)
+    def mouse_sun(self, x, y):
+        for item in self.sun_group:
+            # print(item.image.get_rect())
+            if item.rect.collidepoint(x, y):
+                print("click sun")
+                item.kill()
+                #  TODO: tính điểm
+
+    # def move_plant(self, type):
+    #     for item in self.plant_group:
+    #         if item.can_move:
+    #             item.update_move(type)
+    #     # plant.update_move(type)
+
+    def remove_zombie(self):
+        for item in self.zombie_group:
+            if item.check_can_remove():
+                self.zombie_group.remove(item)
+
+    def setupCars(self):
+        for i in range(5):
+            self.car_group.add(Car(190, i))
 
     def pos_plant(self, mouse_pos):
-        
         for item in self.plant_group:
             if item.can_move:
                 item.mouse_pos_plant(mouse_pos)
+                self.can_pos_plant = False
 
     def checkCarCollisions(self):
         collided_func = pygame.sprite.collide_circle_ratio(0.8)

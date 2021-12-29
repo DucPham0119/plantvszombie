@@ -21,28 +21,26 @@ class Boostrap:
         while running:
             # Check to see if the user wants to quit
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RIGHT:
-                        my_game.move_plant("right")
-                    if event.key == pygame.K_LEFT:
-                        my_game.move_plant("left")
-                    if event.key == pygame.K_DOWN:
-                        my_game.move_plant('down')
-                    if event.key == pygame.K_UP:
-                        my_game.move_plant('up')
-                    if event.key == pygame.K_SPACE:
-                        my_game.move_plant('space')
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+                # if event.type == pygame.KEYDOWN:
+                #     if event.key == pygame.K_RIGHT:
+                #         my_game.move_plant("right")
+                #     if event.key == pygame.K_LEFT:
+                #         my_game.move_plant("left")
+                #     if event.key == pygame.K_DOWN:
+                #         my_game.move_plant('down')
+                #     if event.key == pygame.K_UP:
+                #         my_game.move_plant('up')
+                #     if event.key == pygame.K_SPACE:
+                #         my_game.move_plant('space')
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
-                    print(mouse_pos)
-                    # row = (mouse_pos[1] - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y
-                    # col = round((mouse_pos[0] - constant.START_X - 5 * constant.COL_X // 6) // constant.COL_X)
-                    # if row == -1:
-                    #     row = 0
-                    # if col == -1:
-                    #     col = 0
-                    # print(row, col)
-                    my_game.pos_plant(mouse_pos)
+                    if my_game.can_pos_plant:
+                        # print(mouse_pos)
+                        my_game.pos_plant(mouse_pos)
+                    else:
+                        print(mouse_pos)
+                        x, y = event.pos
+                        my_game.mouse_sun(x, y)
 
                 if event.type == pygame.QUIT:
                     running = False

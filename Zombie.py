@@ -1,3 +1,4 @@
+import random
 import time
 
 import pygame
@@ -146,8 +147,11 @@ import constant
 #         self.losHead = True
 #         if self.head_group is not None:
 #             self.head_group.add(ZombieHead(self.rect.centerx, self.rect.bottom))
+from Sun import Sun
+
+
 class Zombie(pygame.sprite.Sprite):
-    def __init__(self, x, line, name, health, head_group=None, damage=1):
+    def __init__(self, x, line, name, health, sun_group, head_group=None, damage=1):
         pygame.sprite.Sprite.__init__(self)
 
         self.name = name
@@ -166,6 +170,7 @@ class Zombie(pygame.sprite.Sprite):
         self.losHead = False
         self.helmet = False
         self.head_group = head_group
+        self.sun_group = sun_group
 
         self.walk_timer = 0
         self.animate_timer = 0
@@ -299,6 +304,9 @@ class Zombie(pygame.sprite.Sprite):
             self.current_sprite += 1
             if self.current_sprite >= len(self.zombie_list):
                 if self.state == constant.DIE:
+                    x = random.randint(200, 900)
+                    des_y = random.randint(200, 550)
+                    self.sun_group.add(Sun(x, 0, des_y))
                     self.kill()
                     return
                 self.current_sprite = 0
