@@ -17,27 +17,27 @@ class Zombie(pygame.sprite.Sprite):
         self.name = name
         self.current_sprite = 0
         self.die = False
-        self.damage_focus = 30
+        self.damage_focus = 5
         self.zombie_list = []
-        # self.zombie_head_list = []
         self.zombie_lost_head_list = []
         self.zombie_die_list = []
-        self.healthy = 400
+        self.zombie_attack_list = []
+        self.zombie_lost_head_attack_list = []
+        self.healthy = 500
         self.can_zombie_move = True
 
-        # value check zombie head and zombie lost head
-        self.animate_zombie = True
-        self.animate_zombie_head = 0
-        self.animate_zombie_lost_head = False
-        self.animate_zombie_dead = 0
-
+        # current_sprite cua cac trang thai animation zombie
         self.current_zombie_lost_head = 0
         self.current_zombie_dead = 0
 
+        # value check zombie attack
+        self.zombie_attack = True
+        self.zombie_lost_head_attack = False
         self.init_zombie_list()
-        # self.init_zombie_head()
         self.init_zombie_lost_head()
         self.init_zombie_die()
+        self.init_zombie_attack()
+        self.init_zombie_lost_head_attack()
 
     def init_zombie_list(self):
         for i in range(1, 22):
@@ -55,6 +55,19 @@ class Zombie(pygame.sprite.Sprite):
             self.zombie_die_list.append(
                 pygame.image.load("assets/Zombies/NormalZombie/ZombieDie/ZombieDie_" + str(i) + ".png")
             )
+
+    def init_zombie_attack(self):
+        for i in range(0, 21):
+            self.zombie_attack_list.append(
+                pygame.image.load("assets/Zombies/NormalZombie/ZombieAttack/ZombieAttack_"+str(i)+".png")
+            )
+
+    def init_zombie_lost_head_attack(self):
+        for i in range(0,11):
+            self.zombie_lost_head_attack_list.append(
+                pygame.image.load("assets/Zombies/NormalZombie/ZombieLostHeadAttack/ZombieLostHeadAttack_"+str(i)+".png")
+            )
+
 
     def update(self, plant):
         self.move()
@@ -80,13 +93,13 @@ class Zombie(pygame.sprite.Sprite):
 
     # Animation cho zombie bi mat dau
     def animation_lost_head(self, zombie_list):
+        if not self.zombie_lost_head_attack:
+            if self.current_zombie_lost_head < len(zombie_list) - 1:
+                self.current_zombie_lost_head += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
+            else:
+                self.current_zombie_lost_head = 0
 
-        if self.current_zombie_lost_head < len(zombie_list) - 1:
-            self.current_zombie_lost_head += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
-        else:
-            self.current_zombie_lost_head = 0
-
-        self.image = zombie_list[int(self.current_zombie_lost_head)]
+            self.image = zombie_list[int(self.current_zombie_lost_head)]
 
     # Animation cho zombie khi chet
     def animation_zombie_dead(self, zombie_list):
@@ -103,11 +116,11 @@ class Zombie(pygame.sprite.Sprite):
         if self.healthy > 100:
             self.animation(self.zombie_list)
             self.can_zombie_move = True
-        elif 100 >= self.healthy > 1:
+        elif 100 >= self.healthy > 0:
+            self.zombie_attack = False
             self.animation_lost_head(self.zombie_lost_head_list)
         else:
             self.can_zombie_move = False
-
             self.animation_zombie_dead(self.zombie_die_list)
 
     # collision voi plant
@@ -115,8 +128,16 @@ class Zombie(pygame.sprite.Sprite):
         for item in plant:
             if pygame.sprite.collide_mask(self, item):
                 self.can_zombie_move = False
+                if self.zombie_attack:
+                    self.animation(self.zombie_attack_list)
+                else:
+                    self.zombie_lost_head_attack = True
+                    self.animation(self.zombie_lost_head_attack_list)
                 item.health -= self.damage_focus
+                if self.healthy <= 0:
+                    self.kill()
                 if item.health == 0:
                     item.remove(plant)
+                    self.zombie_lost_head_attack = False
                     self.can_zombie_move = True
                 break
