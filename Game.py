@@ -107,24 +107,9 @@ class Game:
         if len(self.zombie_group) <= 10:
             x = random.randint(1000, constant.WINDOW_WIDTH) + 40
             line = random.randint(0, 4)
-            # zombie_head = ZombieHead(x,line)
-            # self.setLostHead(zombie_head)
-            zombie = Zombie(x, line, "zombie", self.zombie_head_group)
+            zombie = Zombie(x, line, "zombie")
             self.zombie_group.add(zombie)
 
-    # set zombie lost head
-
-    # def setLostHead(self, zombie_head):
-    #     if len(self.zombie_head_group) < 1:
-    #         self.zombie_head_group.add(zombie_head)
-
-    # def check_lost_head(self):
-    #     if self.is_check < 100:
-    #         self.setLostHead()
-    #         self.is_check += 1
-    #     else:
-    #         for zombie in self.zombie_head_group:
-    #             self.zombie_head_group.remove(zombie)
 
     def move_plant(self, type):
         for item in self.plant_group:
