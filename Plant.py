@@ -67,6 +67,9 @@ class Plant(pygame.sprite.Sprite):
 
         self.image = self.plant_list[int(self.current_sprite)]
 
+    def move_plant(self, x, y):
+        self.rect.center = (x,y)
+
     def checkPea(self, display_surface, zombie):
         self.line = (self.rect.y - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y + 1
         for item in zombie:

@@ -82,7 +82,7 @@ class PeaIce(Pea):
             if pygame.sprite.collide_mask(self, item):
                 if item.health > 0:
                     item.health -= self.damage_focus
-                    self.changeImage(item)
+                    self.setExplode()
                     self.fly_state = False
                 else:
                     item.remove(zombie)

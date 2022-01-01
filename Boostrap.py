@@ -16,7 +16,7 @@ class Boostrap:
         background_rect.topleft = (0, 0)
 
         my_game = Game(display_surface)
-        my_game.pause_game("Zombie Knight", "Press 'Enter' to Begin")
+        my_game.pause_game("Plant & Zombie", "Press 'Enter' to Begin")
         running = True
         while running:
             # Check to see if the user wants to quit
@@ -34,14 +34,16 @@ class Boostrap:
                 #         my_game.move_plant('space')
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
+                    x, y = mouse_pos
                     if my_game.can_pos_plant:
-                        # print(mouse_pos)
                         my_game.pos_plant(mouse_pos)
+                    elif my_game.check_click_menu(mouse_pos):
+                        my_game.add_plant_mouse(x, y)
+                        my_game.movePlant()
                     else:
-                        print(mouse_pos)
-                        x, y = event.pos
-                        my_game.mouse_sun(x, y)
 
+                        my_game.check_click_sun(x, y)
+                # if event.type == pygame.M
                 if event.type == pygame.QUIT:
                     running = False
 
