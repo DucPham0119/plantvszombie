@@ -55,9 +55,6 @@ class PeaNormal(Pea):
                     item.health -= self.damage_focus
                     self.setExplode()
                     self.fly_state = False
-                # else:
-                #
-                #     item.remove(zombie)
                 self.exist = False
                 break
 

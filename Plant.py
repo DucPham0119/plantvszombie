@@ -68,7 +68,7 @@ class Plant(pygame.sprite.Sprite):
         self.image = self.plant_list[int(self.current_sprite)]
 
     def move_plant(self, x, y):
-        self.rect.center = (x,y)
+        self.rect.center = (x, y)
 
     def checkPea(self, display_surface, zombie):
         self.line = (self.rect.y - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y + 1
@@ -78,23 +78,6 @@ class Plant(pygame.sprite.Sprite):
                     self.fire()
                 if len(self.peas) != 0:
                     self.peas.draw(display_surface)
-
-    # def update_move(self, type):
-    #     if type == 'right' and self.location_y < 8:
-    #         self.location_y += 1
-    #     if type == 'left' and self.location_y > 0:
-    #         self.location_y -= 1
-    #     if type == 'up' and self.location_x > 0:
-    #         self.location_x -= 1
-    #     if type == 'down' and self.location_x < 4:
-    #         self.location_x += 1
-    #
-    #     self.update_position()
-    #
-    #     if type == "space" and check_map[self.location_x][self.location_y] == 0:
-    #         self.is_animate = True
-    #         self.can_move = False
-    #         check_map[self.location_x][self.location_y] = 1
 
     def mouse_pos_plant(self, mouse_pos):
         pos_x = (mouse_pos[1] - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y
