@@ -1,10 +1,11 @@
 import pygame
 
 import constant
+from ZombieHead import ZombieHead
 
 
 class Zombie(pygame.sprite.Sprite):
-    def __init__(self, x, line, name):
+    def __init__(self, x, line, name, head_group):
         super().__init__()
         self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
         self.rect = self.image.get_rect()
@@ -20,6 +21,7 @@ class Zombie(pygame.sprite.Sprite):
         self.zombie_die_list = []
         self.zombie_attack_list = []
         self.zombie_lost_head_attack_list = []
+        self.head_zombie = head_group
         self.health = 500
         self.can_zombie_move = True
 
@@ -66,9 +68,10 @@ class Zombie(pygame.sprite.Sprite):
                     "assets/Zombies/NormalZombie/ZombieLostHeadAttack/ZombieLostHeadAttack_" + str(i) + ".png")
             )
 
-    def update(self, plant):
+    def update(self, surface, plant):
         self.move()
-        self.check_animation_zombie()
+        self.head_zombie.update()
+        self.check_animation_zombie(surface)
         self.collisionPlant(plant)
 
     def move(self):
@@ -82,9 +85,9 @@ class Zombie(pygame.sprite.Sprite):
     def animation(self, zombie_list):
         if self.current_sprite < len(zombie_list) - 1:
             self.current_sprite += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
-        elif zombie_list == self.zombie_die_list:
-            self.kill()
-            return
+        # elif zombie_list == self.zombie_die_list:
+        #     self.kill()
+        #     return
         else:
             self.current_sprite = 0
 
@@ -96,40 +99,40 @@ class Zombie(pygame.sprite.Sprite):
     #         return
     #     self.animation(zombie_list)
 
-    # # Animation cho zombie bi mat dau
-    # def animation_lost_head(self, zombie_list):
-    #     if not self.zombie_lost_head_attack:
-    #         if self.current_zombie_lost_head < len(zombie_list) - 1:
-    #             self.current_zombie_lost_head += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
-    #         else:
-    #             self.current_zombie_lost_head = 0
-    #
-    #         self.image = zombie_list[int(self.current_zombie_lost_head)]
-    #
-    # # Animation cho zombie khi chet
-    # def animation_zombie_dead(self, zombie_list):
-    #
-    #     if self.current_zombie_dead < len(zombie_list) - 1:
-    #         self.current_zombie_dead += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
-    #     else:
-    #         self.kill()
-    #         return
-    #     self.image = zombie_list[int(self.current_zombie_dead)]
+    # Animation cho zombie bi mat dau
+    def animation_lost_head(self, zombie_list):
+        if not self.zombie_lost_head_attack:
+            if self.current_zombie_lost_head < len(zombie_list) - 1:
+                self.current_zombie_lost_head += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
+            else:
+                self.current_zombie_lost_head = 0
+
+            self.image = zombie_list[int(self.current_zombie_lost_head)]
+
+    # Animation cho zombie khi chet
+    def animation_zombie_dead(self, zombie_list):
+
+        if self.current_zombie_dead < len(zombie_list) - 1:
+            self.current_zombie_dead += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
+        else:
+            self.kill()
+            return
+        self.image = zombie_list[int(self.current_zombie_dead)]
 
     # Check cac trang thai animate cua zombie
-    def check_animation_zombie(self):
+    def check_animation_zombie(self, surface):
         if self.health > 100:
             self.animation(self.zombie_list)
             self.can_zombie_move = True
         elif 100 >= self.health > 0:
             self.zombie_attack = False
-            # self.animation_lost_head(self.zombie_lost_head_list)
-            self.animation(self.zombie_lost_head_list)
+            self.animation_lost_head(self.zombie_lost_head_list)
+            self.head_zombie.add(ZombieHead(self.rect.centerx, self.rect.bottom))
+            self.head_zombie.draw(surface)
 
         else:
             self.can_zombie_move = False
-            self.animation(self.zombie_die_list)
-            # self.animation_zombie_dead(self.zombie_die_list)
+            self.animation_zombie_dead(self.zombie_die_list)
 
     # collision voi plant
     def collisionPlant(self, plant):

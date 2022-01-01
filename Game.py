@@ -32,9 +32,9 @@ class Game:
         self.click_card = False
 
         self.zombie_group = pygame.sprite.Group()
-        self.zombie_head_group = pygame.sprite.Group()
+        self.zombie_head_group = pygame.sprite.GroupSingle()
         self.plant_group = pygame.sprite.Group()
-        self.pea_group = pygame.sprite.Group()
+        self.pea_group = pygame.sprite.GroupSingle()
         self.car_group = pygame.sprite.Group()
         self.sun_group = pygame.sprite.Group()
         self.card = constant.card_name_list
@@ -58,14 +58,20 @@ class Game:
         self.remove_zombie()
         self.draw()
         self.add_zombie()
+        
         self.menu_bar.update(pygame.time.get_ticks())
         self.menu_bar.draw(self.display_surface)
-        self.zombie_group.update(self.plant_group)
+
+        self.zombie_head_group.update()
+        self.zombie_group.update(self.display_surface, self.plant_group)
         self.zombie_group.draw(self.display_surface)
+
         self.plant_group.update(self.display_surface)
         self.plant_group.draw(self.display_surface)
+
         self.car_group.update(self.zombie_group)
         self.car_group.draw(self.display_surface)
+
         self.sun_group.update()
         self.sun_group.draw(self.display_surface)
 
@@ -116,7 +122,7 @@ class Game:
         if pygame.time.get_ticks() - self.zombie_time >= 7000:
             x = random.randint(1000, constant.WINDOW_WIDTH) + 40
             line = random.randint(0, 4)
-            zombie = Zombie(x, line, "zombie")
+            zombie = Zombie(x, line, "zombie", self.zombie_head_group)
             self.zombie_group.add(zombie)
             self.zombie_time = pygame.time.get_ticks()
 

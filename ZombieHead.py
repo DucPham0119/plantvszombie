@@ -16,7 +16,15 @@ class ZombieHead(pygame.sprite.Sprite):
         self.init_zombie_head()
 
     def update(self):
+        self.move()
         self.animation()
+
+    def move(self):
+        # self.rect.x -= 1
+        self.rect.y -= 1
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
 
     def init_zombie_head(self):
         for i in range(0, 12):
@@ -27,6 +35,8 @@ class ZombieHead(pygame.sprite.Sprite):
         if self.current_sprite < len(self.zombie_head_list) - 1:
             self.current_sprite += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
         else:
-            self.current_sprite = 0
+            self.kill()
+            return
+            # self.current_sprite = 0
 
         self.image = self.zombie_head_list[int(self.current_sprite)]
