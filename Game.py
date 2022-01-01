@@ -58,7 +58,7 @@ class Game:
         self.remove_zombie()
         self.draw()
         self.add_zombie()
-        
+
         self.menu_bar.update(pygame.time.get_ticks())
         self.menu_bar.draw(self.display_surface)
 
@@ -136,9 +136,21 @@ class Game:
         for card in self.menu_bar.card_list:
             if card.rect.collidepoint(x, y):
                 self.can_pos_plant = True
-                number_plant_can_move = filter(lambda x: x.can_move, self.plant_group)
+                number_plant_can_move = filter(lambda plant: plant.can_move, self.plant_group)
+                plant_name = constant.plant_name_list[card.name_index]
                 if len(list(number_plant_can_move)) == 0:
-                    self.plant_group.add(Threepeater(x, y, "Threepeater", self.zombie_group))
+                    # if plant_name == 'SunFlower':
+                    #     self.plant_group.add(SunFlower(x, y, "Threepeater", self.zombie_group))
+                    #     pygame.mouse.set_visible(False)
+                    # if plant_name == 'Peashooter':
+                    #     self.plant_group.add(Peashooter(x, y, "Peashooter", self.zombie_group))
+                    #     pygame.mouse.set_visible(False)
+                    if plant_name == 'RepeaterPea':
+                        self.plant_group.add(RepeaterPea(x, y, "RepeaterPea", self.zombie_group))
+                    elif plant_name == 'SnowPea':
+                        self.plant_group.add(SnowPea(x, y, "SnowPea", self.zombie_group))
+                    elif plant_name == 'Threepeater':
+                        self.plant_group.add(SnowPea(x, y, "Threepeater", self.zombie_group))
                     pygame.mouse.set_visible(False)
 
                 # for plant in self.plant_group:
@@ -146,10 +158,9 @@ class Game:
                 #         x,y=pygame.mouse.get_pos()
                 #         plant.move_plant(x,y)
 
-    def movePlant(self):
+    def movePlant(self, x, y):
         for plant in self.plant_group:
             if plant.can_move:
-                x, y = pygame.mouse.get_pos()
                 plant.move_plant(x, y)
 
     def remove_zombie(self):

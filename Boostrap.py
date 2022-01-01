@@ -19,19 +19,9 @@ class Boostrap:
         my_game.pause_game("Plant & Zombie", "Press 'Enter' to Begin")
         running = True
         while running:
+            # print(pygame.event.get())
             # Check to see if the user wants to quit
             for event in pygame.event.get():
-                # if event.type == pygame.KEYDOWN:
-                #     if event.key == pygame.K_RIGHT:
-                #         my_game.move_plant("right")
-                #     if event.key == pygame.K_LEFT:
-                #         my_game.move_plant("left")
-                #     if event.key == pygame.K_DOWN:
-                #         my_game.move_plant('down')
-                #     if event.key == pygame.K_UP:
-                #         my_game.move_plant('up')
-                #     if event.key == pygame.K_SPACE:
-                #         my_game.move_plant('space')
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     x, y = mouse_pos
@@ -39,11 +29,11 @@ class Boostrap:
                         my_game.pos_plant(mouse_pos)
                     elif my_game.check_click_menu(mouse_pos):
                         my_game.add_plant_mouse(x, y)
-                        my_game.movePlant()
                     else:
-
                         my_game.check_click_sun(x, y)
-                # if event.type == pygame.M
+                if event.type == pygame.KMOD_LGUI:
+                    mouse_pos = pygame.mouse.get_pos()
+                    my_game.movePlant(mouse_pos[0], mouse_pos[1])
                 if event.type == pygame.QUIT:
                     running = False
 
@@ -51,12 +41,6 @@ class Boostrap:
             display_surface.blit(background_image, background_rect)
             # update and draw sprite group
             my_game.update()
-            # my_game.zombie_group.update()
-            # my_game.zombie_group.draw(display_surface)
-            # my_game.plant_group.update()
-            # my_game.plant_group.draw(display_surface)
-            # pea_group.update()
-            # Update the display and tick the clock
             pygame.display.update()
             clock.tick(fps)
 
