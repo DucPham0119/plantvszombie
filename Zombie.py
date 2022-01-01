@@ -146,7 +146,7 @@ class Zombie(pygame.sprite.Sprite):
                     self.animation(self.zombie_lost_head_attack_list)
                 item.health -= self.damage_focus
                 if self.health <= 0:
-                    self.kill()
+                    self.animation_zombie_dead(self.zombie_die_list)
                 if item.health == 0:
                     item.remove(plant)
                     self.zombie_lost_head_attack = False
