@@ -70,11 +70,12 @@ class Zombie(pygame.sprite.Sprite):
                     "assets/Zombies/NormalZombie/ZombieLostHeadAttack/ZombieLostHeadAttack_" + str(i) + ".png")
             )
 
-    def update(self, surface, plant):
+    def update(self, surface, plant, flower):
         self.move()
         self.head_zombie.update()
         self.check_animation_zombie(surface)
         self.collisionPlant(plant)
+        self.collisionPlant(flower)
 
     def move(self):
         if self.can_zombie_move:

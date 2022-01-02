@@ -37,8 +37,8 @@ class MenuBar:
     def update(self, current_time):
         self.current_time = current_time
         for card in self.card_list:
-            card.update(self.sun_value, self.current_time)
-            self.openCard(card)
+            card.update(self.current_time)
+            self.openCard(card, self.current_time)
 
     def setupCards(self, card_list):
         self.card_list = []
@@ -77,12 +77,14 @@ class MenuBar:
                 card.setFrozenTime(self.current_time)
                 break
 
-    def openCard(self, card):
+    def openCard(self, card, current_time):
         # for card in self.card_list:
-        if self.sun_value >= card.sun_cost:
+        if card.canClick(self.sun_value, current_time):
             card.image.set_alpha(250)
-        else:
+        elif not card.canClick(self.sun_value, current_time):
             card.image.set_alpha(120)
+        # else:
+        #     card.image.set_alpha(120)
 
     def drawSunValue(self):
         self.value_image = getSunValueImage(self.sun_value)

@@ -7,6 +7,7 @@ from Card import Image
 from MenuBar import MenuBar
 from Plant import RepeaterPea, SnowPea, Threepeater, Peashooter
 from Sun import Sun
+from SunFlower import SunFlower
 from Zombie import Zombie
 from config import check_map, card_name_list, plant_name_list, plant_sun_list
 
@@ -17,6 +18,7 @@ class Game:
     def __init__(self, display_surface):
         """Initialize the game"""
         # Set constant variables
+
         self.image = pygame.sprite.GroupSingle()
         self.type_plant = None
         self.zombie_time = pygame.time.get_ticks()
@@ -38,6 +40,7 @@ class Game:
         self.zombie_group = pygame.sprite.Group()
         self.zombie_head_group = pygame.sprite.GroupSingle()
         self.plant_group = pygame.sprite.Group()
+        self.sunflower_group = pygame.sprite.Group()
         self.pea_group = pygame.sprite.GroupSingle()
         self.car_group = pygame.sprite.Group()
         self.sun_group = pygame.sprite.Group()
@@ -60,7 +63,7 @@ class Game:
         self.setupCars()
         # self.add_plant()
         self.remove_zombie()
-        self.draw()
+        # self.draw()
         self.add_zombie()
 
         self.menu_bar.update(pygame.time.get_ticks())
@@ -70,33 +73,20 @@ class Game:
         self.image.draw(self.display_surface)
 
         self.zombie_head_group.update()
-        self.zombie_group.update(self.display_surface, self.plant_group)
+        self.zombie_group.update(self.display_surface, self.plant_group, self.sunflower_group)
         self.zombie_group.draw(self.display_surface)
 
         self.plant_group.update(self.display_surface)
         self.plant_group.draw(self.display_surface)
+
+        self.sunflower_group.update()
+        self.sunflower_group.draw(self.display_surface)
 
         self.car_group.update(self.zombie_group)
         self.car_group.draw(self.display_surface)
 
         self.sun_group.update()
         self.sun_group.draw(self.display_surface)
-
-    def draw(self):
-        """Draw the game HUD"""
-
-        # Set text
-        score_text = self.HUD_font.render("Score: " + str(self.score), True, constant.WHITE)
-        score_rect = score_text.get_rect()
-        score_rect.topleft = (10, constant.WINDOW_HEIGHT - 50)
-
-        round_text = self.HUD_font.render("Night: " + str(self.round_number), True, constant.WHITE)
-        round_rect = round_text.get_rect()
-        round_rect.topright = (constant.WINDOW_WIDTH - 10, constant.WINDOW_HEIGHT - 50)
-
-        # Draw the HUD
-        self.display_surface.blit(score_text, score_rect)
-        self.display_surface.blit(round_text, round_rect)
 
     def add_sun(self):
         if pygame.time.get_ticks() - self.sun_time >= constant.ADD_SUN_TIME:
@@ -123,15 +113,15 @@ class Game:
     def add_plant_mouse(self, x, y):
         for card in self.menu_bar.card_list:
             if card.rect.collidepoint(x, y):
-
                 number_plant_can_move = filter(lambda plant: plant.can_move, self.plant_group)
                 plant_name = plant_name_list[card.name_index]
                 sun_plant = plant_sun_list[card.name_index]
                 if len(list(number_plant_can_move)) == 0 and self.menu_bar.sun_value >= sun_plant:
                     self.can_pos_plant = True
-                    # if plant_name == 'SunFlower':
-                    #     self.image.add(Image(x, y, 'SunFlower'))
-                    if plant_name == 'Peashooter' and self.menu_bar.sun_value >= sun_plant:
+                    if plant_name == 'SunFlower':
+                        self.image.add(Image(x, y, 'SunFlower'))
+                        self.menu_bar.decreaseSunValue(sun_plant)
+                    elif plant_name == 'Peashooter' and self.menu_bar.sun_value >= sun_plant:
                         self.image.add(Image(x, y, 'Peashooter'))
                         self.menu_bar.decreaseSunValue(sun_plant)
                     elif plant_name == 'RepeaterPea' and self.menu_bar.sun_value >= sun_plant:
@@ -184,14 +174,19 @@ class Game:
                 self.plant_group.add(Threepeater(pos_x, pos_y, "Threepeater", self.zombie_group))
             elif name == 'Peashooter':
                 self.plant_group.add(Peashooter(x, y, "Peashooter", self.zombie_group))
-            # else:
-            #     self.plant_group.add(SunFlower(x, y, "Threepeater", self.zombie_group))
+            else:
+                self.sunflower_group.add(SunFlower(x, y, "SunFlower", self.sun_group))
 
             self.removeImage()
             self.plant_seed(pos_x, pos_y)
 
     def plant_seed(self, x, y):
         for item in self.plant_group:
+            if item.can_move:
+                item.mouse_pos_plant(x, y)
+                pygame.mouse.set_visible(True)
+                self.can_pos_plant = False
+        for item in self.sunflower_group:
             if item.can_move:
                 item.mouse_pos_plant(x, y)
                 pygame.mouse.set_visible(True)

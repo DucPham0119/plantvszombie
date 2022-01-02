@@ -3,7 +3,6 @@ import time
 import pygame
 
 import constant
-from Plant import Plant
 
 
 class Sun(pygame.sprite.Sprite):
@@ -35,10 +34,12 @@ class Sun(pygame.sprite.Sprite):
 
     def handleState(self):
         if self.rect.y == self.dest_y:
+            self.time = time.time_ns()
             self.state = constant.FREEZE
             if (time.time_ns() - self.time) > constant.SUN_LIVE_TIME:
                 self.state = constant.DIE
                 self.kill()
+
 
     def move(self):
         if self.state == constant.WALK:

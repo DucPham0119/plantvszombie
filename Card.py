@@ -5,7 +5,6 @@ from config import card_name_list, plant_sun_list, plant_frozen_time_list
 
 class Card:
     def __init__(self, x, y, name_index):
-        # self.loadFrame(constant.card_name_list[name_index], scale)
         self.name_index = name_index
         self.image = self.loadImage(card_name_list[self.name_index])
         self.rect = self.image.get_rect()
@@ -49,29 +48,8 @@ class Card:
     def setFrozenTime(self, current_time):
         self.frozen_timer = current_time
 
-    def createShowImage(self, sun_value, current_time):
-        '''create a card image to show cool down status
-           or disable status when have not enough sun value'''
-        time = current_time - self.frozen_timer
-        if time < self.frozen_time:  # cool down status
-            image = pygame.Surface([self.rect.w, self.rect.h])
-            frozen_image = self.image.copy()
-            frozen_image.set_alpha(128)
-            frozen_height = (self.frozen_time - time) / self.frozen_time * self.rect.h
-
-            image.blit(frozen_image, (0, 0), (0, 0, self.rect.w, frozen_height))
-            image.blit(self.image, (0, frozen_height),
-                       (0, frozen_height, self.rect.w, self.rect.h - frozen_height))
-        elif self.sun_cost > sun_value:  # disable status
-            image = self.image.copy()
-            image.set_alpha(192)
-        else:
-            image = self.image
-        return image
-
-    def update(self, sun_value, current_time):
+    def update(self, current_time):
         if (current_time - self.refresh_timer) >= 250:
-            self.image = self.createShowImage(sun_value, current_time)
             self.refresh_timer = current_time
 
     def draw(self, surface):
@@ -89,8 +67,5 @@ class Image(pygame.sprite.Sprite):
     def move_image(self, x, y):
         self.rect.center = (x, y)
 
-    # def update(self):
-
     def draw(self, surface):
         surface.blit(self.image, self.rect)
-
