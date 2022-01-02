@@ -5,6 +5,9 @@ map = [
     [[290, 400], [370, 405], [450, 405], [540, 405], [615, 405], [695, 405], [775, 405], [855, 405], [940, 405]],
     [[290, 500], [370, 500], [450, 500], [540, 500], [620, 500], [700, 500], [780, 500], [860, 500], [940, 500]],
 ]
+
+map_zombie = [150, 250, 350, 450, 550]
+
 check_map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -14,3 +17,9 @@ check_map = [
 ]
 
 car_map = [145, 245, 345, 445, 545]
+
+card_name_list = ['card_sunflower', 'card_peashooter', 'card_snowpea', 'card_repeaterpea', 'card_threepeashooter']
+plant_name_list = ['SunFlower', 'Peashooter', 'SnowPea', 'RepeaterPea', 'Threepeater']
+plant_sun_list = [50, 100, 175, 200, 325]
+plant_frozen_time_list = [7500, 7500, 7500, 30000, 50000]
+all_card_list = [0, 1, 2, 3, 4]

@@ -2,6 +2,7 @@ import pygame
 
 import constant
 from ZombieHead import ZombieHead
+from config import check_map, map_zombie
 
 
 class Zombie(pygame.sprite.Sprite):
@@ -10,8 +11,9 @@ class Zombie(pygame.sprite.Sprite):
         self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
         self.rect = self.image.get_rect()
         self.line = line
-        y = constant.START_Y + (self.line - 1) * constant.LINE_Y + constant.LINE_Y // 2
-        self.rect.topright = (x, y)
+        y = map_zombie[self.line]
+        self.rect.centerx = x
+        self.rect.bottom = y
         self.name = name
         self.current_sprite = 0
         self.die = False
@@ -146,9 +148,10 @@ class Zombie(pygame.sprite.Sprite):
                     self.animation(self.zombie_lost_head_attack_list)
                 item.health -= self.damage_focus
                 if self.health <= 0:
-                    self.kill()
+                    self.animation_zombie_dead(self.zombie_die_list)
                 if item.health == 0:
-                    item.remove(plant)
+                    item.kill()
+                    check_map[item.location_x][item.location_y] = 0
+                    print(check_map[item.location_x][item.location_y])
                     self.zombie_lost_head_attack = False
                     self.can_zombie_move = True
-                break

@@ -1,6 +1,5 @@
 import pygame
 
-import constant
 from Pea import PeaNormal, PeaIce
 from config import map, check_map
 
@@ -34,13 +33,13 @@ class Plant(pygame.sprite.Sprite):
         self.is_animate = False
         self.can_move = True
         self.fly = False
-        # self.dark_img()
+        self.state = False
 
         self.peas = pygame.sprite.GroupSingle()
         self.zombie_group = zombie_group
 
-        self.location_x = x
-        self.location_y = y
+        self.location_x = 0
+        self.location_y = 0
 
     def init_plant_list(self):
         pass
@@ -50,14 +49,10 @@ class Plant(pygame.sprite.Sprite):
         self.rect.center = current_location[0], current_location[1]
 
     def update(self, display_surface):
-        # self.map()
         self.peas.update(display_surface, self.zombie_group)
         self.checkPea(display_surface, self.zombie_group)
-        # self.check_fire(display_surface)
         if self.is_animate:
             self.animate()
-        # else:
-        #     self.move(display_surface)
 
     def animate(self):
         self.current_sprite += 0.4
@@ -71,34 +66,42 @@ class Plant(pygame.sprite.Sprite):
         self.rect.center = (x, y)
 
     def checkPea(self, display_surface, zombie):
-        self.line = (self.rect.y - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y + 1
         for item in zombie:
-            if self.line == item.line and self.is_animate:
+            if self.location_x == item.line and self.is_animate and self.rect.x < item.rect.right:
                 if len(self.peas) == 0:
                     self.fire()
                 if len(self.peas) != 0:
                     self.peas.draw(display_surface)
 
-    def mouse_pos_plant(self, mouse_pos):
-        pos_x = (mouse_pos[1] - constant.START_Y - constant.LINE_Y // 2) // constant.LINE_Y
-        pos_y = round((mouse_pos[0] - constant.START_X - 5 * constant.COL_X // 6) // constant.COL_X)
-        if pos_x == -1:
-            pos_x = 0
-        if pos_y == -1:
-            pos_y = 0
-        self.location_x = pos_x
-        self.location_y = pos_y
-        if check_map[self.location_x][self.location_y] == 0:
-            self.is_animate = True
-            self.can_move = False
-            self.update_position()
-            check_map[self.location_x][self.location_y] = 1
+    def mouse_pos_plant(self, x, y):
+        self.is_animate = True
+        self.can_move = False
+        self.location_x = x
+        self.location_y = y
+        self.update_position()
+        check_map[self.location_x][self.location_y] = 1
 
     def fire(self):
         pass
 
     def loadImage(self, name):
         return pygame.image.load(self.path + str(self.name) + "/" + name)
+
+
+class Peashooter(Plant):
+    def __init__(self, x, y, name, zombie_group):
+        super().__init__(x, y, name, zombie_group)
+
+    def init_plant_list(self):
+        for i in range(0, 13):
+            typeName = self.name + "_" + str(i) + ".png"
+            image = self.loadImage(typeName)
+            self.plant_list.append(image)
+
+    def fire(self):
+        pea_normal = PeaNormal(self.rect.centerx, self.rect.centery, 'PeaNormal')
+        self.peas.add(pea_normal)
+        pass
 
 
 class RepeaterPea(Plant):
@@ -147,6 +150,3 @@ class Threepeater(Plant):
         pea_normal = PeaNormal(self.rect.centerx, self.rect.centery, 'PeaNormal')
         self.peas.add(pea_normal)
         pass
-
-# array: 5x9, array[0][0] = x, array[0][1]=y
-# current location: x=0,y=0 -> x = 0, y= 1

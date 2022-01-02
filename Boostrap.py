@@ -24,16 +24,17 @@ class Boostrap:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
+                    print(mouse_pos)
                     x, y = mouse_pos
                     if my_game.can_pos_plant:
-                        my_game.pos_plant(mouse_pos)
+                        my_game.pos_plant(mouse_pos, my_game.type_plant)
                     elif my_game.check_click_menu(mouse_pos):
                         my_game.add_plant_mouse(x, y)
                     else:
                         my_game.check_click_sun(x, y)
                 if event.type == pygame.KMOD_LGUI:
                     mouse_pos = pygame.mouse.get_pos()
-                    my_game.movePlant(mouse_pos[0], mouse_pos[1])
+                    my_game.moveImage(mouse_pos[0], mouse_pos[1])
                 if event.type == pygame.QUIT:
                     running = False
 
