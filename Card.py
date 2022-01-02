@@ -1,20 +1,20 @@
 import pygame
 
-import constant
+from config import card_name_list, plant_sun_list, plant_frozen_time_list
 
 
 class Card:
     def __init__(self, x, y, name_index):
         # self.loadFrame(constant.card_name_list[name_index], scale)
         self.name_index = name_index
-        self.image = self.loadImage(constant.card_name_list[self.name_index])
+        self.image = self.loadImage(card_name_list[self.name_index])
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
         self.name_index = int(name_index)
-        self.sun_cost = constant.plant_sun_list[self.name_index]
-        self.frozen_time = constant.plant_frozen_time_list[self.name_index]
+        self.sun_cost = plant_sun_list[self.name_index]
+        self.frozen_time = plant_frozen_time_list[self.name_index]
         self.frozen_timer = -self.frozen_time
         self.refresh_timer = 0
         self.select = True
@@ -73,6 +73,23 @@ class Card:
         if (current_time - self.refresh_timer) >= 250:
             self.image = self.createShowImage(sun_value, current_time)
             self.refresh_timer = current_time
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+
+
+class Image(pygame.sprite.Sprite):
+    def __init__(self, x, y, name):
+        super().__init__()
+        self.name = name
+        self.image = pygame.image.load('assets/Plant/' + name + '/' + name + '_0.png')
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def move_image(self, x, y):
+        self.rect.center = (x, y)
+
+    # def update(self):
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)

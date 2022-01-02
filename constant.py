@@ -22,9 +22,9 @@ GOLD = (255, 215, 0)
 GREEN = (0, 255, 0)
 
 # Map
-START_Y = 50
+START_Y = 60
 LINE_Y = 100
-START_X = 230
+START_X = 80
 COL_X = 70
 
 
@@ -65,8 +65,5 @@ SUN_LIVE_TIME = 7000
 SUN_CHANGE = 1
 
 #
-card_name_list = ['card_sunflower', 'card_repeaterpea', 'card_snowpea', 'card_threepeashooter']
-plant_name_list = ['SunFlower', 'RepeaterPea', 'SnowPea', 'Threepeater']
-plant_sun_list = [50, 200, 175, 325]
-plant_frozen_time_list = [7500, 7500, 30000, 50000]
-all_card_list = [0, 1, 2, 3]
+ADD_SUN_TIME = 10000
+ADD_ZOMBIE_TIME = 15000

@@ -2,6 +2,7 @@ import pygame
 
 import constant
 from Card import Card
+from config import plant_name_list
 
 
 def getSunValueImage(sun_value):
@@ -37,6 +38,7 @@ class MenuBar:
         self.current_time = current_time
         for card in self.card_list:
             card.update(self.sun_value, self.current_time)
+            self.openCard(card)
 
     def setupCards(self, card_list):
         self.card_list = []
@@ -52,7 +54,7 @@ class MenuBar:
         for card in self.card_list:
             if card.checkMouseClick(mouse_pos):
                 if card.canClick(self.sun_value, self.current_time):
-                    result = (constant.plant_name_list[card.name_index], card)
+                    result = (plant_name_list[card.name_index], card)
                 break
         return result
 
@@ -71,9 +73,16 @@ class MenuBar:
 
     def setCardFrozenTime(self, plant_name):
         for card in self.card_list:
-            if constant.plant_name_list[card.name_index] == plant_name:
+            if plant_name_list[card.name_index] == plant_name:
                 card.setFrozenTime(self.current_time)
                 break
+
+    def openCard(self, card):
+        # for card in self.card_list:
+        if self.sun_value >= card.sun_cost:
+            card.image.set_alpha(250)
+        else:
+            card.image.set_alpha(120)
 
     def drawSunValue(self):
         self.value_image = getSunValueImage(self.sun_value)
