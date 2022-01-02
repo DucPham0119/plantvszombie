@@ -2,6 +2,7 @@ import pygame
 
 import constant
 from ZombieHead import ZombieHead
+from config import map, check_map
 
 
 class Zombie(pygame.sprite.Sprite):
@@ -151,4 +152,5 @@ class Zombie(pygame.sprite.Sprite):
                     item.remove(plant)
                     self.zombie_lost_head_attack = False
                     self.can_zombie_move = True
+
                 break

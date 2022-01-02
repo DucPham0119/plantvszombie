@@ -27,6 +27,10 @@ LINE_Y = 100
 START_X = 230
 COL_X = 70
 
+
+# Plant
+PLANT_HEALTHY = 300
+
 # Zombie
 WALK = 'walk'
 ATTACK = 'attack'
