@@ -8,7 +8,7 @@ from MenuBar import MenuBar
 from Plant import RepeaterPea, SnowPea, Threepeater, Peashooter
 from Sun import Sun
 from Zombie import Zombie
-from config import check_map, card_name_list, plant_name_list
+from config import check_map, card_name_list, plant_name_list, plant_sun_list
 
 
 class Game:
@@ -99,14 +99,14 @@ class Game:
         self.display_surface.blit(round_text, round_rect)
 
     def add_sun(self):
-        if pygame.time.get_ticks() - self.sun_time >= 10000:
+        if pygame.time.get_ticks() - self.sun_time >= constant.ADD_SUN_TIME:
             x = random.randint(200, 900)
             des_y = random.randint(200, 550)
             self.sun_group.add(Sun(x, 0, des_y))
             self.sun_time = pygame.time.get_ticks()
 
     def add_zombie(self):
-        if pygame.time.get_ticks() - self.zombie_time >= 7000:
+        if pygame.time.get_ticks() - self.zombie_time >= constant.ADD_ZOMBIE_TIME:
             x = random.randint(1000, constant.WINDOW_WIDTH) + 40
             line = random.randint(0, 4)
             print('zombie_line ', line)
@@ -123,20 +123,26 @@ class Game:
     def add_plant_mouse(self, x, y):
         for card in self.menu_bar.card_list:
             if card.rect.collidepoint(x, y):
-                self.can_pos_plant = True
+
                 number_plant_can_move = filter(lambda plant: plant.can_move, self.plant_group)
                 plant_name = plant_name_list[card.name_index]
-                if len(list(number_plant_can_move)) == 0:
+                sun_plant = plant_sun_list[card.name_index]
+                if len(list(number_plant_can_move)) == 0 and self.menu_bar.sun_value >= sun_plant:
+                    self.can_pos_plant = True
                     # if plant_name == 'SunFlower':
                     #     self.image.add(Image(x, y, 'SunFlower'))
-                    if plant_name == 'Peashooter':
+                    if plant_name == 'Peashooter' and self.menu_bar.sun_value >= sun_plant:
                         self.image.add(Image(x, y, 'Peashooter'))
-                    elif plant_name == 'RepeaterPea':
+                        self.menu_bar.decreaseSunValue(sun_plant)
+                    elif plant_name == 'RepeaterPea' and self.menu_bar.sun_value >= sun_plant:
                         self.image.add(Image(x, y, 'RepeaterPea'))
-                    elif plant_name == 'SnowPea':
+                        self.menu_bar.decreaseSunValue(sun_plant)
+                    elif plant_name == 'SnowPea' and self.menu_bar.sun_value >= sun_plant:
                         self.image.add(Image(x, y, 'SnowPea'))
-                    elif plant_name == 'Threepeater':
+                        self.menu_bar.decreaseSunValue(sun_plant)
+                    elif plant_name == 'Threepeater' and self.menu_bar.sun_value >= sun_plant:
                         self.image.add(Image(x, y, 'Threepeater'))
+                        self.menu_bar.decreaseSunValue(sun_plant)
 
                     self.type_plant = plant_name
                     pygame.mouse.set_visible(False)
