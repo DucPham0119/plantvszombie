@@ -17,6 +17,7 @@ class Game:
 
     def __init__(self, display_surface):
 
+        # self.button = False
         self.image = pygame.sprite.GroupSingle()
         self.type_plant = None
         self.zombie_time = pygame.time.get_ticks()
@@ -47,6 +48,8 @@ class Game:
         self.display_surface = display_surface
 
         self.time = 0
+        self.exit = False
+        self.again_play = False
 
     def get_zombie_group(self):
         return self.zombie_group
@@ -60,7 +63,7 @@ class Game:
     def update(self):
         self.time += 1
         self.add_sun()
-        self.remove_zombie()
+        # self.remove_zombie()
         self.add_zombie()
 
         self.menu_bar.update(pygame.time.get_ticks())
@@ -154,11 +157,6 @@ class Game:
             # if image.can_move:
             image.move_image(x, y)
 
-    def remove_zombie(self):
-        for item in self.zombie_group:
-            if item.check_can_remove():
-                self.zombie_group.remove(item)
-
     def check_click_menu(self, mouse_pos):
         return self.menu_bar.checkMenuBarClick(mouse_pos)
 
@@ -215,38 +213,55 @@ class Game:
             if car.dead:
                 self.car_group.remove(car)
 
-    def pause_game(self, main_text, sub_text):
-        global running
+    def check_game_over(self):
+        for item in self.zombie_group:
+            if item.check_can_remove():
+                return True
+        return False
 
-        # Create main pause text
-        main_text = self.title_font.render(main_text, True, constant.GREEN)
-        main_rect = main_text.get_rect()
-        main_rect.center = (constant.WINDOW_WIDTH // 2, constant.WINDOW_HEIGHT // 2)
+    def game_over(self):
+        if self.check_game_over():
+            self.screen_end_game("screen_game_over.jpg")
 
-        # Create sub pause text
-        sub_text = self.title_font.render(sub_text, True, constant.WHITE)
-        sub_rect = sub_text.get_rect()
-        sub_rect.center = (constant.WINDOW_WIDTH // 2, constant.WINDOW_HEIGHT // 2 + 64)
+    def you_win(self):
+        if self.time >= constant.LEVEL_3_TIME:
+            self.screen_end_game("screen_win.jpg")
 
-        # Display the pause text
-        self.display_surface.fill(constant.BLACK)
-        self.display_surface.blit(main_text, main_rect)
-        self.display_surface.blit(sub_text, sub_rect)
+    def screen_end_game(self, image_name):
+        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name), (1200, 600))
+        rect = image.get_rect()
+        rect.topleft = (0, 0)
+        self.display_surface.blit(image, rect)
         pygame.display.update()
-
-        # Pause the game until user hits enter or quits
         is_paused = True
         while is_paused:
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    # User wants to continue
-                    if event.key == pygame.K_RETURN:
-                        is_paused = False
                 if event.type == pygame.QUIT:
                     is_paused = False
-                    running = False
+                    self.exit = True
 
-    # def game_over(self):
-    #     for item in self.zombie_group:
-    #         if item.check_can_remove():
-    #             self.pause_game("Game Over", 'Press "space" bar to play again')
+    def start_game(self, image_name, button_name):
+        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name), (1200, 600))
+        rect = image.get_rect()
+        rect.topleft = (0, 0)
+
+        button = pygame.transform.scale(pygame.image.load('assets/Background/' + button_name), (64, 64))
+        button_rect = image.get_rect()
+        button_rect.topleft = (560, 280)
+
+        self.display_surface.blit(image, rect)
+        self.display_surface.blit(button, button_rect)
+        pygame.display.update()
+
+        is_paused = True
+        while is_paused:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if (560 <= mouse_pos[0] <= 620 and
+                            button_rect.y <= mouse_pos[1] <= 340):
+                        is_paused = False
+                        self.again_play = True
+                if event.type == pygame.QUIT:
+                    is_paused = False
+                    self.exit = True
