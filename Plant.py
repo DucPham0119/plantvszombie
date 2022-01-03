@@ -1,7 +1,7 @@
 import pygame
 
 from Pea import PeaNormal, PeaIce
-from config import map, check_map
+from config import map_plant, check_map
 
 
 class Plant(pygame.sprite.Sprite):
@@ -45,7 +45,7 @@ class Plant(pygame.sprite.Sprite):
         pass
 
     def update_position(self):
-        current_location = map[self.location_x][self.location_y]
+        current_location = map_plant[self.location_x][self.location_y]
         self.rect.center = current_location[0], current_location[1]
 
     def update(self, display_surface):

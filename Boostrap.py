@@ -9,7 +9,7 @@ class Boostrap:
         pygame.init()
         display_surface = pygame.display.set_mode((constant.WINDOW_WIDTH, constant.WINDOW_HEIGHT))
         pygame.display.set_caption("Game Plant vs Zombie")
-        fps = 60
+        fps = 30
         clock = pygame.time.Clock()
         background_image = pygame.transform.scale(pygame.image.load("assets/Background/Background_1.jpg"), (1400, 600))
         background_rect = background_image.get_rect()
@@ -19,12 +19,10 @@ class Boostrap:
         my_game.pause_game("Plant & Zombie", "Press 'Enter' to Begin")
         running = True
         while running:
-            # print(pygame.event.get())
             # Check to see if the user wants to quit
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
-                    print(mouse_pos)
                     x, y = mouse_pos
                     if my_game.can_pos_plant:
                         my_game.pos_plant(mouse_pos, my_game.type_plant)

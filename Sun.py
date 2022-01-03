@@ -40,11 +40,9 @@ class Sun(pygame.sprite.Sprite):
                 self.state = constant.DIE
                 self.kill()
 
-
     def move(self):
         if self.state == constant.WALK:
             self.rect.y += constant.SUN_CHANGE
-            # print(self.rect)
 
     def animation(self):
         self.current_sprite += 0.4

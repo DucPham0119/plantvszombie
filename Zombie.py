@@ -6,7 +6,7 @@ from config import check_map, map_zombie
 
 
 class Zombie(pygame.sprite.Sprite):
-    def __init__(self, x, line, name, head_group):
+    def __init__(self, x, line, name):
         super().__init__()
         self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
         self.rect = self.image.get_rect()
@@ -23,7 +23,7 @@ class Zombie(pygame.sprite.Sprite):
         self.zombie_die_list = []
         self.zombie_attack_list = []
         self.zombie_lost_head_attack_list = []
-        self.head_zombie = head_group
+        self.head_zombie = pygame.sprite.GroupSingle()
         self.health = 500
         self.can_zombie_move = True
 
@@ -88,19 +88,10 @@ class Zombie(pygame.sprite.Sprite):
     def animation(self, zombie_list):
         if self.current_sprite < len(zombie_list) - 1:
             self.current_sprite += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
-        # elif zombie_list == self.zombie_die_list:
-        #     self.kill()
-        #     return
         else:
             self.current_sprite = 0
 
         self.image = zombie_list[int(self.current_sprite)]
-
-    # def animation_zombie(self, zombie_list):
-    #     if zombie_list == self.zombie_lost_head_list and not self.zombie_lost_head_attack:
-    #         self.animation(zombie_list)
-    #         return
-    #     self.animation(zombie_list)
 
     # Animation cho zombie bi mat dau
     def animation_lost_head(self, zombie_list):
@@ -114,7 +105,6 @@ class Zombie(pygame.sprite.Sprite):
 
     # Animation cho zombie khi chet
     def animation_zombie_dead(self, zombie_list):
-
         if self.current_zombie_dead < len(zombie_list) - 1:
             self.current_zombie_dead += constant.NUMBER_CHANGE_IMAGE_ZOMBIE
         else:
@@ -130,9 +120,8 @@ class Zombie(pygame.sprite.Sprite):
         elif 100 >= self.health > 0:
             self.zombie_attack = False
             self.animation_lost_head(self.zombie_lost_head_list)
-            self.head_zombie.add(ZombieHead(self.rect.centerx, self.rect.bottom))
+            self.head_zombie.add(ZombieHead(self.rect.right, self.rect.top))
             self.head_zombie.draw(surface)
-
         else:
             self.can_zombie_move = False
             self.animation_zombie_dead(self.zombie_die_list)
@@ -147,12 +136,13 @@ class Zombie(pygame.sprite.Sprite):
                 else:
                     self.zombie_lost_head_attack = True
                     self.animation(self.zombie_lost_head_attack_list)
+
                 item.health -= self.damage_focus
+
                 if self.health <= 0:
                     self.animation_zombie_dead(self.zombie_die_list)
                 if item.health == 0:
                     item.kill()
                     check_map[item.location_x][item.location_y] = 0
-                    print(check_map[item.location_x][item.location_y])
                     self.zombie_lost_head_attack = False
                     self.can_zombie_move = True

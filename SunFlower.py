@@ -2,7 +2,7 @@ import pygame
 
 import constant
 from Sun import Sun
-from config import check_map, map
+from config import check_map, map_plant
 
 
 class SunFlower(pygame.sprite.Sprite):
@@ -50,7 +50,7 @@ class SunFlower(pygame.sprite.Sprite):
         check_map[self.location_x][self.location_y] = 1
 
     def update_position(self):
-        current_location = map[self.location_x][self.location_y]
+        current_location = map_plant[self.location_x][self.location_y]
         self.rect.center = current_location[0], current_location[1]
 
     def update(self):

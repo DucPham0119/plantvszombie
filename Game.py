@@ -38,7 +38,7 @@ class Game:
         self.click_card = False
 
         self.zombie_group = pygame.sprite.Group()
-        self.zombie_head_group = pygame.sprite.GroupSingle()
+        # self.zombie_head_group = pygame.sprite.GroupSingle()
         self.plant_group = pygame.sprite.Group()
         self.sunflower_group = pygame.sprite.Group()
         self.pea_group = pygame.sprite.GroupSingle()
@@ -72,7 +72,7 @@ class Game:
         self.image.update()
         self.image.draw(self.display_surface)
 
-        self.zombie_head_group.update()
+        # self.zombie_head_group.update()
         self.zombie_group.update(self.display_surface, self.plant_group, self.sunflower_group)
         self.zombie_group.draw(self.display_surface)
 
@@ -99,8 +99,7 @@ class Game:
         if pygame.time.get_ticks() - self.zombie_time >= constant.ADD_ZOMBIE_TIME:
             x = random.randint(1000, constant.WINDOW_WIDTH) + 40
             line = random.randint(0, 4)
-            print('zombie_line ', line)
-            zombie = Zombie(x, line, "zombie", self.zombie_head_group)
+            zombie = Zombie(x, line, "zombie")
             self.zombie_group.add(zombie)
             self.zombie_time = pygame.time.get_ticks()
 
@@ -230,7 +229,11 @@ class Game:
                     # User wants to continue
                     if event.key == pygame.K_RETURN:
                         is_paused = False
-                # User wants to quit
                 if event.type == pygame.QUIT:
                     is_paused = False
                     running = False
+
+    # def game_over(self):
+    #     for item in self.zombie_group:
+    #         if item.check_can_remove():
+    #             self.pause_game("Game Over", 'Press "space" bar to play again')
