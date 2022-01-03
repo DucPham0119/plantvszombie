@@ -20,6 +20,8 @@ class Pea(pygame.sprite.Sprite):
     def update(self, display_surface, zombie_group):
         self.animation(display_surface)
         self.collisionZombie(zombie_group)
+        if self.rect.x >= 950:
+            self.kill()
         if not self.fly_state:
             if (self.current_time - self.explode_timer) > 100:
                 self.kill()
