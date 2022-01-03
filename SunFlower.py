@@ -53,8 +53,8 @@ class SunFlower(pygame.sprite.Sprite):
         current_location = map_plant[self.location_x][self.location_y]
         self.rect.center = current_location[0], current_location[1]
 
-    def update(self):
-        self.checkSun()
+    def update(self, time):
+        self.creatSun(time)
         if self.is_animate:
             self.animate()
 
@@ -69,7 +69,14 @@ class SunFlower(pygame.sprite.Sprite):
     def move_plant(self, x, y):
         self.rect.center = (x, y)
 
-    def checkSun(self):
-        if pygame.time.get_ticks() - self.current_time >= constant.ADD_SUN_FLOWER:
+    def creatSun(self, time):
+        if time <= constant.LEVEL_1_TIME:
+            add_sun_flower_time = constant.LEVEL_1_SUN_FLOWER_TIME
+        elif time <= constant.LEVEL_2_TIME:
+            add_sun_flower_time = constant.LEVEL_2_SUN_FLOWER_TIME
+        else:
+            add_sun_flower_time = constant.LEVEL_3_SUN_FLOWER_TIME
+
+        if pygame.time.get_ticks() - self.current_time >= add_sun_flower_time:
             self.addSun()
             self.current_time = pygame.time.get_ticks()

@@ -16,8 +16,6 @@ class Game:
     """A class to help manage gameplay"""
 
     def __init__(self, display_surface):
-        """Initialize the game"""
-        # Set constant variables
 
         self.image = pygame.sprite.GroupSingle()
         self.type_plant = None
@@ -38,7 +36,6 @@ class Game:
         self.click_card = False
 
         self.zombie_group = pygame.sprite.Group()
-        # self.zombie_head_group = pygame.sprite.GroupSingle()
         self.plant_group = pygame.sprite.Group()
         self.sunflower_group = pygame.sprite.Group()
         self.pea_group = pygame.sprite.GroupSingle()
@@ -46,8 +43,10 @@ class Game:
         self.sun_group = pygame.sprite.Group()
         self.card = card_name_list
         self.menu_bar = MenuBar(50, self.card)
-
+        self.setupCars()
         self.display_surface = display_surface
+
+        self.time = 0
 
     def get_zombie_group(self):
         return self.zombie_group
@@ -59,11 +58,9 @@ class Game:
         return self.pea_group
 
     def update(self):
+        self.time += 1
         self.add_sun()
-        self.setupCars()
-        # self.add_plant()
         self.remove_zombie()
-        # self.draw()
         self.add_zombie()
 
         self.menu_bar.update(pygame.time.get_ticks())
@@ -72,14 +69,13 @@ class Game:
         self.image.update()
         self.image.draw(self.display_surface)
 
-        # self.zombie_head_group.update()
         self.zombie_group.update(self.display_surface, self.plant_group, self.sunflower_group)
         self.zombie_group.draw(self.display_surface)
 
         self.plant_group.update(self.display_surface)
         self.plant_group.draw(self.display_surface)
 
-        self.sunflower_group.update()
+        self.sunflower_group.update(self.time)
         self.sunflower_group.draw(self.display_surface)
 
         self.car_group.update(self.zombie_group)
@@ -89,17 +85,34 @@ class Game:
         self.sun_group.draw(self.display_surface)
 
     def add_sun(self):
-        if pygame.time.get_ticks() - self.sun_time >= constant.ADD_SUN_TIME:
-            x = random.randint(200, 900)
+        if self.time <= constant.LEVEL_1_TIME:
+            add_sun_time = constant.LEVEL_1_SUN_TIME
+        elif self.time <= constant.LEVEL_2_TIME:
+            add_sun_time = constant.LEVEL_2_SUN_TIME
+        else:
+            add_sun_time = constant.LEVEL_3_SUN_TIME
+
+        if pygame.time.get_ticks() - self.sun_time >= add_sun_time:
+            x = random.randint(250, 900)
             des_y = random.randint(200, 550)
             self.sun_group.add(Sun(x, 0, des_y))
             self.sun_time = pygame.time.get_ticks()
 
     def add_zombie(self):
-        if pygame.time.get_ticks() - self.zombie_time >= constant.ADD_ZOMBIE_TIME:
-            x = random.randint(1000, constant.WINDOW_WIDTH) + 40
+        if self.time <= constant.LEVEL_1_TIME:
+            add_zombie_time = constant.LEVEL_1_ZOMBIE_TIME
+            health = constant.LEVEL_1_ZOMBIE_HEALTH
+        elif self.time <= constant.LEVEL_2_TIME:
+            add_zombie_time = constant.LEVEL_2_ZOMBIE_TIME
+            health = constant.LEVEL_2_ZOMBIE_HEALTH
+        else:
+            add_zombie_time = constant.LEVEL_3_ZOMBIE_TIME
+            health = constant.LEVEL_3_ZOMBIE_HEALTH
+
+        if pygame.time.get_ticks() - self.zombie_time >= add_zombie_time:
+            x = random.randint(1200, constant.WINDOW_WIDTH) + 40
             line = random.randint(0, 4)
-            zombie = Zombie(x, line, "zombie")
+            zombie = Zombie(x, line, "zombie", health)
             self.zombie_group.add(zombie)
             self.zombie_time = pygame.time.get_ticks()
 

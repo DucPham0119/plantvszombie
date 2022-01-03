@@ -22,15 +22,12 @@ class Sun(pygame.sprite.Sprite):
         self.time = 0
         self.state = constant.WALK
         self.sun_value = constant.SUN_VALUE
-        # self.zombie_group = zombie_group
 
     def update(self):
         self.time = time.time_ns()
         self.move()
         self.animation()
         self.handleState()
-
-        # self.checkCollision()
 
     def handleState(self):
         if self.rect.y == self.dest_y:
@@ -52,15 +49,15 @@ class Sun(pygame.sprite.Sprite):
 
         self.image = self.sun_list[int(self.current_sprite)]
 
-    def checkCollision(self, x, y):
-        if self.state == constant.DIE:
-            return False
-        if (self.rect.x <= x <= self.rect.right and
-                self.rect.y <= y <= self.rect.bottom):
-            self.state = constant.DIE
-            self.kill()
-            return True
-        return False
+    # def checkCollision(self, x, y):
+    #     if self.state == constant.DIE:
+    #         return False
+    #     if (self.rect.x <= x <= self.rect.right and
+    #             self.rect.y <= y <= self.rect.bottom):
+    #         self.state = constant.DIE
+    #         self.kill()
+    #         return True
+    #     return False
 
     def loadImage(self):
         for i in range(0, 22):

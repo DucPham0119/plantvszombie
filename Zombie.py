@@ -6,7 +6,7 @@ from config import check_map, map_zombie
 
 
 class Zombie(pygame.sprite.Sprite):
-    def __init__(self, x, line, name):
+    def __init__(self, x, line, name, health):
         super().__init__()
         self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
         self.rect = self.image.get_rect()
@@ -24,7 +24,7 @@ class Zombie(pygame.sprite.Sprite):
         self.zombie_attack_list = []
         self.zombie_lost_head_attack_list = []
         self.head_zombie = pygame.sprite.GroupSingle()
-        self.health = 500
+        self.health = health
         self.can_zombie_move = True
 
         # current_sprite cua cac trang thai animation zombie
@@ -129,7 +129,7 @@ class Zombie(pygame.sprite.Sprite):
     # collision voi plant
     def collisionPlant(self, plant):
         for item in plant:
-            if pygame.sprite.collide_mask(self, item):
+            if pygame.sprite.collide_mask(self, item) and item.location_x == self.line:
                 self.can_zombie_move = False
                 if self.zombie_attack:
                     self.animation(self.zombie_attack_list)
