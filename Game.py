@@ -202,16 +202,17 @@ class Game:
                 pygame.mouse.set_visible(True)
                 self.can_pos_plant = False
 
-    def checkCarCollisions(self):
-        collided_func = pygame.sprite.collide_circle_ratio(0.8)
-        for car in self.car_group:
-            zombies = pygame.sprite.spritecollide(car, self.zombie_group, False, collided_func)
-            for zombie in zombies:
-                # if zombie and zombie.state != c.DIE:
-                car.setWalk()
-                # zombie.setDie()
-            if car.dead:
-                self.car_group.remove(car)
+    # def checkCarCollisions(self):
+    #     # collided_func = pygame.sprite.collide_circle_ratio(0.8)
+    #     for car in self.car_group:
+    #         # zombies = pygame.sprite.spritecollide(car, self.zombie_group, False, collided_func)
+    #         zombie
+    #         for zombie in zombies:
+    #             if zombie.can_zombie_move:
+    #                 car.setWalk()
+    #                 zombie.die_zombie()
+    #         if car.dead:
+    #             self.car_group.remove(car)
 
     def check_game_over(self):
         for item in self.zombie_group:

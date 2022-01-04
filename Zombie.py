@@ -115,16 +115,37 @@ class Zombie(pygame.sprite.Sprite):
     # Check cac trang thai animate cua zombie
     def check_animation_zombie(self, surface):
         if self.health > 100:
-            self.animation(self.zombie_list)
-            self.can_zombie_move = True
+            self.walk()
         elif 100 >= self.health > 0:
-            self.zombie_attack = False
-            self.animation_lost_head(self.zombie_lost_head_list)
-            self.head_zombie.add(ZombieHead(self.rect.right, self.rect.top))
-            self.head_zombie.draw(surface)
+            self.lost_head(surface)
         else:
-            self.can_zombie_move = False
-            self.animation_zombie_dead(self.zombie_die_list)
+            self.die_zombie()
+
+    def walk(self):
+        self.animation(self.zombie_list)
+        self.can_zombie_move = True
+
+    def lost_head(self, surface):
+        self.animation_lost_head(self.zombie_lost_head_list)
+        self.head_zombie.add(ZombieHead(self.rect.right, self.rect.top))
+        self.head_zombie.draw(surface)
+
+    def collisionCar(self):
+        self.health = 0
+
+    def die_zombie(self):
+        self.zombie_attack = False
+        self.can_zombie_move = False
+        self.die = True
+        self.animation_zombie_dead(self.zombie_die_list)
+        print("die")
+
+    def attack(self):
+        self.animation(self.zombie_attack_list)
+
+    def attack_lost_head(self):
+        self.zombie_lost_head_attack = True
+        self.animation(self.zombie_lost_head_attack_list)
 
     # collision voi plant
     def collisionPlant(self, plant):
@@ -132,15 +153,14 @@ class Zombie(pygame.sprite.Sprite):
             if pygame.sprite.collide_mask(self, item) and item.location_x == self.line:
                 self.can_zombie_move = False
                 if self.zombie_attack:
-                    self.animation(self.zombie_attack_list)
+                    self.attack()
                 else:
-                    self.zombie_lost_head_attack = True
-                    self.animation(self.zombie_lost_head_attack_list)
+                    self.attack_lost_head()
 
                 item.health -= self.damage_focus
 
                 if self.health <= 0:
-                    self.animation_zombie_dead(self.zombie_die_list)
+                    self.die_zombie()
                 if item.health == 0:
                     item.kill()
                     check_map[item.location_x][item.location_y] = 0
