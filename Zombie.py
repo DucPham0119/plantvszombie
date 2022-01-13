@@ -8,7 +8,7 @@ from config import check_map, map_zombie
 class Zombie(pygame.sprite.Sprite):
     def __init__(self, x, line, name, health):
         super().__init__()
-        self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png")
+        self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.line = line
         y = map_zombie[self.line]
@@ -43,31 +43,31 @@ class Zombie(pygame.sprite.Sprite):
     def init_zombie_list(self):
         for i in range(1, 22):
             self.zombie_list.append(pygame.transform.scale(
-                pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_" + str(i) + ".png"), (166, 144)))
+                pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_" + str(i) + ".png").convert_alpha(), (166, 144)))
 
     def init_zombie_lost_head(self):
         for i in range(0, 18):
             self.zombie_lost_head_list.append(
-                pygame.image.load("assets/Zombies/NormalZombie/ZombieLostHead/ZombieLostHead_" + str(i) + ".png")
+                pygame.image.load("assets/Zombies/NormalZombie/ZombieLostHead/ZombieLostHead_" + str(i) + ".png").convert_alpha()
             )
 
     def init_zombie_die(self):
         for i in range(0, 10):
             self.zombie_die_list.append(
-                pygame.image.load("assets/Zombies/NormalZombie/ZombieDie/ZombieDie_" + str(i) + ".png")
+                pygame.image.load("assets/Zombies/NormalZombie/ZombieDie/ZombieDie_" + str(i) + ".png").convert_alpha()
             )
 
     def init_zombie_attack(self):
         for i in range(0, 21):
             self.zombie_attack_list.append(
-                pygame.image.load("assets/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + str(i) + ".png")
+                pygame.image.load("assets/Zombies/NormalZombie/ZombieAttack/ZombieAttack_" + str(i) + ".png").convert_alpha()
             )
 
     def init_zombie_lost_head_attack(self):
         for i in range(0, 11):
             self.zombie_lost_head_attack_list.append(
                 pygame.image.load(
-                    "assets/Zombies/NormalZombie/ZombieLostHeadAttack/ZombieLostHeadAttack_" + str(i) + ".png")
+                    "assets/Zombies/NormalZombie/ZombieLostHeadAttack/ZombieLostHeadAttack_" + str(i) + ".png").convert_alpha()
             )
 
     def update(self, surface, plant, flower):

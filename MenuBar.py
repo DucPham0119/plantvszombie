@@ -25,7 +25,7 @@ def getSunValueImage(sun_value):
 class MenuBar:
     def __init__(self, sun_value, card_list):
         super().__init__()
-        self.image = pygame.transform.scale(pygame.image.load("assets/Background/ChooserBackground.png"), (522, 87))
+        self.image = pygame.transform.scale(pygame.image.load("assets/Background/ChooserBackground.png").convert_alpha(), (522, 87))
         self.rect = self.image.get_rect()
         self.rect.x = 200
         self.rect.y = 0

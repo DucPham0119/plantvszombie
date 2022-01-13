@@ -42,6 +42,7 @@ class Game:
         self.pea_group = pygame.sprite.GroupSingle()
         self.car_group = pygame.sprite.Group()
         self.sun_group = pygame.sprite.Group()
+        self.head_group = pygame.sprite.Group()
         self.card = card_name_list
         self.menu_bar = MenuBar(50, self.card)
         self.setupCars()
@@ -229,7 +230,7 @@ class Game:
             self.screen_end_game("screen_win.jpg")
 
     def screen_end_game(self, image_name):
-        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name), (1200, 600))
+        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name).convert_alpha(), (1200, 600))
         rect = image.get_rect()
         rect.topleft = (0, 0)
         self.display_surface.blit(image, rect)
@@ -242,11 +243,11 @@ class Game:
                     self.exit = True
 
     def start_game(self, image_name, button_name):
-        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name), (1200, 600))
+        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name).convert_alpha(), (1200, 600))
         rect = image.get_rect()
         rect.topleft = (0, 0)
 
-        button = pygame.transform.scale(pygame.image.load('assets/Background/' + button_name), (64, 64))
+        button = pygame.transform.scale(pygame.image.load('assets/Background/' + button_name).convert_alpha(), (64, 64))
         button_rect = image.get_rect()
         button_rect.topleft = (560, 280)
 

@@ -62,4 +62,4 @@ class Sun(pygame.sprite.Sprite):
     def loadImage(self):
         for i in range(0, 22):
             self.sun_list.append(
-                pygame.transform.scale(pygame.image.load('assets/Sun/Sun' + '_' + str(i) + '.png'), (78, 78)))
+                pygame.transform.scale(pygame.image.load('assets/Sun/Sun' + '_' + str(i) + '.png').convert_alpha(), (78, 78)))
