@@ -8,6 +8,7 @@ from config import check_map, map_zombie
 class Zombie(pygame.sprite.Sprite):
     def __init__(self, x, line, name, health):
         super().__init__()
+        self.head_status = True
         self.image = pygame.image.load("assets/Zombies/NormalZombie/Zombie/Zombie_0.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.line = line
@@ -26,6 +27,7 @@ class Zombie(pygame.sprite.Sprite):
         self.head_zombie = pygame.sprite.GroupSingle()
         self.health = health
         self.can_zombie_move = True
+        self.head_status = False
 
         # current_sprite cua cac trang thai animation zombie
         self.current_zombie_lost_head = 0
@@ -73,6 +75,7 @@ class Zombie(pygame.sprite.Sprite):
     def update(self, surface, plant, flower):
         self.move()
         self.head_zombie.update()
+        self.head_zombie.draw(surface)
         self.check_animation_zombie(surface)
         self.collisionPlant(plant)
         self.collisionPlant(flower)
@@ -127,8 +130,12 @@ class Zombie(pygame.sprite.Sprite):
 
     def lost_head(self, surface):
         self.animation_lost_head(self.zombie_lost_head_list)
-        self.head_zombie.add(ZombieHead(self.rect.right, self.rect.top))
-        self.head_zombie.draw(surface)
+        if not self.head_status:
+            self.head(surface)
+
+    def head(self, surface):
+        self.head_status = True
+        self.head_zombie.add(ZombieHead(self.rect.right, self.rect.bottom))
 
     def collisionCar(self):
         self.health = 0
@@ -138,7 +145,6 @@ class Zombie(pygame.sprite.Sprite):
         self.can_zombie_move = False
         self.die = True
         self.animation_zombie_dead(self.zombie_die_list)
-        print("die")
 
     def attack(self):
         self.animation(self.zombie_attack_list)
