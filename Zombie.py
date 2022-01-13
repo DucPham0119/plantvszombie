@@ -119,8 +119,9 @@ class Zombie(pygame.sprite.Sprite):
     def check_animation_zombie(self, surface):
         if self.health > 100:
             self.walk()
-        elif 100 >= self.health > 0:
+        elif 100 >= self.health > 10:
             self.lost_head(surface)
+            self.zombie_attack = False
         else:
             self.die_zombie()
 
