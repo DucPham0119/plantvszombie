@@ -19,7 +19,7 @@ class Card:
         self.select = True
 
     def loadImage(self, name):
-        return pygame.transform.scale(pygame.image.load('assets/Card/' + name + '.png'), (52, 70))
+        return pygame.transform.scale(pygame.image.load('assets/Card/' + name + '.png').convert_alpha(), (52, 70))
 
     # Ktra sự click
     def checkMouseClick(self, mouse_pos):
@@ -60,7 +60,7 @@ class Image(pygame.sprite.Sprite):
     def __init__(self, x, y, name):
         super().__init__()
         self.name = name
-        self.image = pygame.image.load('assets/Plant/' + name + '/' + name + '_0.png')
+        self.image = pygame.image.load('assets/Plant/' + name + '/' + name + '_0.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 

@@ -85,7 +85,7 @@ class Plant(pygame.sprite.Sprite):
         pass
 
     def loadImage(self, name):
-        return pygame.image.load(self.path + str(self.name) + "/" + name)
+        return pygame.image.load(self.path + str(self.name) + "/" + name).convert_alpha()
 
 
 class Peashooter(Plant):

@@ -33,7 +33,7 @@ class SunFlower(pygame.sprite.Sprite):
 
     def init_flower_list(self):
         for i in range(0, 18):
-            image = pygame.image.load('assets/Plant/SunFlower/' + 'SunFlower_' + str(i) + '.png')
+            image = pygame.image.load('assets/Plant/SunFlower/' + 'SunFlower_' + str(i) + '.png').convert_alpha()
             self.flower_list.append(image)
 
     def addSun(self):
