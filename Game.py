@@ -8,7 +8,7 @@ from MenuBar import MenuBar
 from Plant import RepeaterPea, SnowPea, Threepeater, Peashooter
 from Sun import Sun
 from SunFlower import SunFlower
-from Zombie import Zombie
+from Zombie import Zombie, NormalZombie, NewspaperZombie, FlagZombie, BucketheadZombie
 from config import check_map, card_name_list, plant_name_list, plant_sun_list
 
 
@@ -114,10 +114,21 @@ class Game:
             health = constant.LEVEL_3_ZOMBIE_HEALTH
 
         if pygame.time.get_ticks() - self.zombie_time >= add_zombie_time:
-            x = random.randint(1200, constant.WINDOW_WIDTH) + 40
+            x = random.randint(1100, constant.WINDOW_WIDTH)
             line = random.randint(0, 4)
-            zombie = Zombie(x, line, "zombie", health)
-            self.zombie_group.add(zombie)
+            typeZombie = random.randint(0, 3)
+            if typeZombie == 0:
+                zombie = NormalZombie(x, line, "zombie", health)
+                self.zombie_group.add(zombie)
+            elif typeZombie == 1:
+                zombie = FlagZombie(x, line, "zombie", health)
+                self.zombie_group.add(zombie)
+            elif typeZombie == 2:
+                zombie = BucketheadZombie(x, line, "zombie", health)
+                self.zombie_group.add(zombie)
+            # else:
+            #     zombie = NewspaperZombie(x, line, "zombie", health)
+
             self.zombie_time = pygame.time.get_ticks()
 
     def check_click_sun(self, x, y):
@@ -155,7 +166,6 @@ class Game:
 
     def moveImage(self, x, y):
         for image in self.image:
-            # if image.can_move:
             image.move_image(x, y)
 
     def check_click_menu(self, mouse_pos):
@@ -203,18 +213,6 @@ class Game:
                 pygame.mouse.set_visible(True)
                 self.can_pos_plant = False
 
-    # def checkCarCollisions(self):
-    #     # collided_func = pygame.sprite.collide_circle_ratio(0.8)
-    #     for car in self.car_group:
-    #         # zombies = pygame.sprite.spritecollide(car, self.zombie_group, False, collided_func)
-    #         zombie
-    #         for zombie in zombies:
-    #             if zombie.can_zombie_move:
-    #                 car.setWalk()
-    #                 zombie.die_zombie()
-    #         if car.dead:
-    #             self.car_group.remove(car)
-
     def check_game_over(self):
         for item in self.zombie_group:
             if item.check_can_remove():
@@ -230,7 +228,8 @@ class Game:
             self.screen_end_game("screen_win.jpg")
 
     def screen_end_game(self, image_name):
-        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name).convert_alpha(), (1200, 600))
+        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name).convert_alpha(),
+                                       (1200, 600))
         rect = image.get_rect()
         rect.topleft = (0, 0)
         self.display_surface.blit(image, rect)
@@ -243,7 +242,8 @@ class Game:
                     self.exit = True
 
     def start_game(self, image_name, button_name):
-        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name).convert_alpha(), (1200, 600))
+        image = pygame.transform.scale(pygame.image.load('assets/Background/' + image_name).convert_alpha(),
+                                       (1200, 600))
         rect = image.get_rect()
         rect.topleft = (0, 0)
 
