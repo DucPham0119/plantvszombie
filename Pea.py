@@ -6,7 +6,7 @@ import constant
 
 
 class Pea(pygame.sprite.Sprite):
-    def __init__(self, x, y, name):
+    def __init__(self, x, y, name, damage):
         super().__init__()
 
         self.name = name
@@ -16,7 +16,7 @@ class Pea(pygame.sprite.Sprite):
         self.x_vel = 4
         self.fly_state = True
         self.exist = True
-        self.damage_focus = 5
+        self.damage_focus = damage
         self.current_time = 0
 
     def update(self, display_surface, zombie_group):
@@ -44,8 +44,8 @@ class Pea(pygame.sprite.Sprite):
 
 
 class PeaNormal(Pea):
-    def __init__(self, x, y, name):
-        super().__init__(x, y, name)
+    def __init__(self, x, y, name, damage):
+        super().__init__(x, y, name, damage)
         type_name = self.name + "_0.png"
         self.image = self.loadImage(type_name)
         self.rect = self.image.get_rect()
@@ -70,8 +70,8 @@ class PeaNormal(Pea):
 
 
 class PeaIce(Pea):
-    def __init__(self, x, y, name):
-        super().__init__(x, y, name)
+    def __init__(self, x, y, name, damage):
+        super().__init__(x, y, name, damage)
         type_name = self.name + "_0.png"
         self.image = self.loadImage(type_name)
         self.rect = self.image.get_rect()

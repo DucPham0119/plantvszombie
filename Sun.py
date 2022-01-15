@@ -49,16 +49,6 @@ class Sun(pygame.sprite.Sprite):
 
         self.image = self.sun_list[int(self.current_sprite)]
 
-    # def checkCollision(self, x, y):
-    #     if self.state == constant.DIE:
-    #         return False
-    #     if (self.rect.x <= x <= self.rect.right and
-    #             self.rect.y <= y <= self.rect.bottom):
-    #         self.state = constant.DIE
-    #         self.kill()
-    #         return True
-    #     return False
-
     def loadImage(self):
         for i in range(0, 22):
             self.sun_list.append(

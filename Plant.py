@@ -91,6 +91,9 @@ class Plant(pygame.sprite.Sprite):
 class Peashooter(Plant):
     def __init__(self, x, y, name, zombie_group):
         super().__init__(x, y, name, zombie_group)
+        self.damage_pea = 3
+        self.STARTING_HEALTH = 290
+        self.health = self.STARTING_HEALTH
 
     def init_plant_list(self):
         for i in range(0, 13):
@@ -99,7 +102,7 @@ class Peashooter(Plant):
             self.plant_list.append(image)
 
     def fire(self):
-        pea_normal = PeaNormal(self.rect.centerx, self.rect.centery, 'PeaNormal')
+        pea_normal = PeaNormal(self.rect.centerx, self.rect.centery, 'PeaNormal', self.damage_pea)
         self.peas.add(pea_normal)
         pass
 
@@ -107,6 +110,9 @@ class Peashooter(Plant):
 class RepeaterPea(Plant):
     def __init__(self, x, y, name, zombie_group):
         super().__init__(x, y, name, zombie_group)
+        self.damage_pea = 8
+        self.STARTING_HEALTH = 305
+        self.health = self.STARTING_HEALTH
 
     def init_plant_list(self):
         for i in range(0, 15):
@@ -115,7 +121,7 @@ class RepeaterPea(Plant):
             self.plant_list.append(image)
 
     def fire(self):
-        pea_normal = PeaNormal(self.rect.centerx, self.rect.centery, 'PeaNormal')
+        pea_normal = PeaNormal(self.rect.centerx, self.rect.centery, 'PeaNormal', self.damage_pea)
         self.peas.add(pea_normal)
         pass
 
@@ -123,6 +129,9 @@ class RepeaterPea(Plant):
 class SnowPea(Plant):
     def __init__(self, x, y, name, zombie_group):
         super().__init__(x, y, name, zombie_group)
+        self.damage_pea = 5
+        self.STARTING_HEALTH = 300
+        self.health = self.STARTING_HEALTH
 
     def init_plant_list(self):
         for i in range(0, 15):
@@ -131,7 +140,7 @@ class SnowPea(Plant):
             self.plant_list.append(image)
 
     def fire(self):
-        pea_normal = PeaIce(self.rect.centerx, self.rect.centery, 'PeaIce')
+        pea_normal = PeaIce(self.rect.centerx, self.rect.centery, 'PeaIce', self.damage_pea)
         self.peas.add(pea_normal)
         pass
 
@@ -139,6 +148,9 @@ class SnowPea(Plant):
 class Threepeater(Plant):
     def __init__(self, x, y, name, zombie_group):
         super().__init__(x, y, name, zombie_group)
+        self.damage_pea = 10
+        self.STARTING_HEALTH = 310
+        self.health = self.STARTING_HEALTH
 
     def init_plant_list(self):
         for i in range(0, 14):
@@ -147,6 +159,6 @@ class Threepeater(Plant):
             self.plant_list.append(image)
 
     def fire(self):
-        pea_normal = PeaNormal(self.rect.centerx, self.rect.centery, 'PeaNormal')
+        pea_normal = PeaNormal(self.rect.centerx, self.rect.centery, 'PeaNormal', self.damage_pea)
         self.peas.add(pea_normal)
         pass

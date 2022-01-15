@@ -47,7 +47,6 @@ class MenuBar:
         for index in range(0, len(card_list)):
             x += 55
             self.card_list.append(Card(x, y, index))
-            print(self.card_list[index].rect)
 
     def checkCardClick(self, mouse_pos):
         result = None
@@ -61,7 +60,6 @@ class MenuBar:
     def checkMenuBarClick(self, mouse_pos):
         x, y = mouse_pos
         if self.rect.collidepoint(x, y):
-            print('click')
             return True
         return False
 
@@ -78,13 +76,10 @@ class MenuBar:
                 break
 
     def openCard(self, card, current_time):
-        # for card in self.card_list:
         if card.canClick(self.sun_value, current_time):
             card.image.set_alpha(250)
         elif not card.canClick(self.sun_value, current_time):
             card.image.set_alpha(120)
-        # else:
-        #     card.image.set_alpha(120)
 
     def drawSunValue(self):
         self.value_image = getSunValueImage(self.sun_value)
