@@ -169,6 +169,14 @@ class Game:
         x, y = mouse_pos
         pos_x = (y - constant.START_Y) // 100
         pos_y = x // constant.START_X - 3
+        if pos_x < 0:
+            pos_x = 0
+        if pos_x > 4:
+            pos_x = 4
+        if pos_y < 0:
+            pos_y =0
+        if pos_y > 8:
+            pos_y = 8
         if self.canSeedPlant(pos_x, pos_y):
             if name == 'RepeaterPea':
                 self.plant_group.add(RepeaterPea(pos_x, pos_y, "RepeaterPea", self.zombie_group))
