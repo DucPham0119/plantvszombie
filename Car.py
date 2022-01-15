@@ -34,14 +34,9 @@ class Car(pygame.sprite.Sprite):
         if not self.dead:
             surface.blit(self.image, self.rect)
 
-    # def attack(self, zombie):
-    #     for item in zombie:
-    #         if pygame.sprite.collide_mask(self, item):
-    #             self.walk = True
-
     def checkCarCollisions(self, zombie_group):
         for zombie in zombie_group:
-            if pygame.sprite.collide_mask(self, zombie) and zombie.can_zombie_move and self.line == zombie.line:
+            if pygame.sprite.collide_mask(self, zombie) and not zombie.die and self.line == zombie.line:
                 self.setWalk()
                 zombie.collisionCar()
                 zombie.die_zombie()

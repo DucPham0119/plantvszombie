@@ -198,6 +198,8 @@ class NormalZombie(Zombie):
 class FlagZombie(Zombie):
     def __init__(self, x, line, name, health):
         super().__init__(x, line, name, health)
+        self.damage_focus = 8
+        self.health = health + 5
 
     def init_zombie_list(self):
         for i in range(0, 12):
@@ -232,6 +234,8 @@ class FlagZombie(Zombie):
 class BucketheadZombie(Zombie):
     def __init__(self, x, line, name, health):
         super().__init__(x, line, name, health)
+        self.damage_focus = 10
+        self.health = health + 8
 
     def init_zombie_list(self):
         for i in range(0, 15):
@@ -247,106 +251,3 @@ class BucketheadZombie(Zombie):
                     "assets/Zombies/BucketheadZombie/BucketheadZombieAttack/BucketheadZombieAttack_" + str(
                         i) + ".png").convert_alpha()
             )
-
-
-class NewspaperZombie(Zombie):
-    def __init__(self, x, line, name, health):
-        super().__init__(x, line, name, health)
-        self.zombie_no_paper_attack = False
-        self.zombie_no_paper_list = []
-        self.zombie_no_paper_attack_list = []
-
-        self.init_zombie_no_paper_list()
-        self.init_zombie_no_paper_attack_list()
-
-    def init_zombie_list(self):
-        for i in range(0, 19):
-            name = "NewspaperZombie/NewspaperZombie_" + str(i) + ".png"
-            self.zombie_list.append(pygame.transform.scale(
-                pygame.image.load("assets/Zombies/NewspaperZombie/" + name).convert_alpha(),
-                (166, 144)))
-
-    def init_zombie_no_paper_list(self):
-        for i in range(0, 14):
-            name = "NewspaperZombieNoPaper/NewspaperZombieNoPaper_" + str(i) + ".png"
-            self.zombie_list.append(pygame.transform.scale(
-                pygame.image.load("assets/Zombies/NewspaperZombie/" + name).convert_alpha(),
-                (166, 144)))
-
-    def init_zombie_no_paper_attack_list(self):
-        for i in range(0, 7):
-            name = "NewspaperZombieNoPaperAttack/NewspaperZombieNoPaperAttack_" + str(i) + ".png"
-            self.zombie_list.append(pygame.transform.scale(
-                pygame.image.load("assets/Zombies/NewspaperZombie/" + name).convert_alpha(),
-                (166, 144)))
-
-    def init_zombie_lost_head(self):
-        for i in range(0, 16):
-            name = "NewspaperZombieLostHead/NewspaperZombieLostHead_" + str(i) + ".png"
-            self.zombie_list.append(pygame.transform.scale(
-                pygame.image.load("assets/Zombies/NewspaperZombie/" + name).convert_alpha(),
-                (166, 144)))
-
-    def init_zombie_die(self):
-        for i in range(0, 11):
-            name = "NewspaperZombieDie/NewspaperZombieDie_" + str(i) + ".png"
-            self.zombie_list.append(pygame.transform.scale(
-                pygame.image.load("assets/Zombies/NewspaperZombie/" + name).convert_alpha(),
-                (166, 144)))
-
-    def init_zombie_attack(self):
-        for i in range(0, 8):
-            name = "NewspaperZombieAttack/NewspaperZombieAttack_" + str(i) + ".png"
-            self.zombie_list.append(pygame.transform.scale(
-                pygame.image.load("assets/Zombies/NewspaperZombie/" + name).convert_alpha(),
-                (166, 144)))
-
-    def init_zombie_lost_head_attack(self):
-        for i in range(0, 7):
-            name = "NewspaperZombieLostHeadAttack/NewspaperZombieLostHeadAttack_" + str(i) + ".png"
-            self.zombie_list.append(pygame.transform.scale(
-                pygame.image.load("assets/Zombies/NewspaperZombie/" + name).convert_alpha(),
-                (166, 144)))
-
-    def attack_no_paper(self):
-        self.zombie_no_paper_attack = True
-        self.animation(self.zombie_no_paper_attack_list)
-
-    def no_paper(self):
-        self.animation(self.zombie_no_paper_list)
-
-    # Check cac trang thai animate cua zombie
-    def check_animation_zombie(self):
-        if self.health > 3 * self.health // 4:
-            self.walk()
-        elif 3 * self.health // 4 >= self.health > self.health // 2:
-            self.no_paper()
-            self.zombie_no_paper_attack = True
-            self.zombie_attack = False
-        elif self.health // 2 >= self.health > self.health // 4:
-            self.lost_head()
-            self.zombie_attack = False
-        else:
-            self.die_zombie()
-
-    # collision voi plant
-    def collisionPlant(self, plant):
-        for item in plant:
-            if pygame.sprite.collide_mask(self, item) and item.location_x == self.line:
-                self.can_zombie_move = False
-                if self.zombie_attack:
-                    self.attack()
-                elif self.zombie_no_paper_attack:
-                    self.attack_no_paper()
-                else:
-                    self.attack_lost_head()
-
-                item.health -= self.damage_focus
-
-                if self.health <= 0:
-                    self.die_zombie()
-                if item.health == 0:
-                    item.kill()
-                    check_map[item.location_x][item.location_y] = 0
-                    self.zombie_lost_head_attack = False
-                    self.can_zombie_move = True

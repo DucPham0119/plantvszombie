@@ -15,12 +15,12 @@ class Boostrap:
         background_rect = background_image.get_rect()
         background_rect.topleft = (0, 0)
 
-        sound_game = pygame.mixer.Sound('assets/Music/Crazy_Dave.mp3')
-        sound_game.play()
+        pygame.mixer.music.load('assets/Music/Crazy_Dave.mp3')
+        pygame.mixer.music.play(-1)
         my_game = Game(display_surface)
         my_game.start_game("plantzombie.jpg", 'play-button.png')
         running = True
-        sound_game.play()
+        # sound_game.play()
         while running and not my_game.exit:
             # Check to see if the user wants to quit
             for event in pygame.event.get():

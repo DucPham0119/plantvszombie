@@ -8,27 +8,22 @@ from MenuBar import MenuBar
 from Plant import RepeaterPea, SnowPea, Threepeater, Peashooter
 from Sun import Sun
 from SunFlower import SunFlower
-from Zombie import Zombie, NormalZombie, NewspaperZombie, FlagZombie, BucketheadZombie
+from Zombie import NormalZombie, FlagZombie, BucketheadZombie
 from config import check_map, card_name_list, plant_name_list, plant_sun_list
 
 
 class Game:
-    """A class to help manage gameplay"""
-
     def __init__(self, display_surface):
-
-        # self.button = False
         self.image = pygame.sprite.GroupSingle()
         self.type_plant = None
         self.zombie_time = pygame.time.get_ticks()
         self.sun_time = pygame.time.get_ticks()
         self.HUD_font = pygame.font.SysFont('calibri', 64)
         self.title_font = pygame.font.SysFont('calibri', 64)
-        self.update_count = 0
-        # Set game values
-        self.score = 0
-        self.round_number = 1
-        self.frame_count = 0
+        # self.update_count = 0
+        #
+        # self.round_number = 1
+        # self.frame_count = 0
 
         self.is_check = 0
 
@@ -52,19 +47,9 @@ class Game:
         self.exit = False
         self.again_play = False
 
-    def get_zombie_group(self):
-        return self.zombie_group
-
-    def get_plant_group(self):
-        return self.plant_group
-
-    def get_pea_group(self):
-        return self.pea_group
-
     def update(self):
         self.time += 1
         self.add_sun()
-        # self.remove_zombie()
         self.add_zombie()
 
         self.menu_bar.update(pygame.time.get_ticks())
@@ -116,7 +101,7 @@ class Game:
         if pygame.time.get_ticks() - self.zombie_time >= add_zombie_time:
             x = random.randint(1100, constant.WINDOW_WIDTH)
             line = random.randint(0, 4)
-            typeZombie = random.randint(0, 3)
+            typeZombie = random.randint(0, 4)
             if typeZombie == 0:
                 zombie = NormalZombie(x, line, "zombie", health)
                 self.zombie_group.add(zombie)
@@ -126,8 +111,6 @@ class Game:
             elif typeZombie == 2:
                 zombie = BucketheadZombie(x, line, "zombie", health)
                 self.zombie_group.add(zombie)
-            # else:
-            #     zombie = NewspaperZombie(x, line, "zombie", health)
 
             self.zombie_time = pygame.time.get_ticks()
 
