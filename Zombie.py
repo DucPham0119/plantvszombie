@@ -27,8 +27,6 @@ class Zombie(pygame.sprite.Sprite):
         self.zombie_die_list = []
         self.zombie_attack_list = []
         self.zombie_lost_head_attack_list = []
-        self.zombie_no_paper_list = []
-        self.zombie_no_paper_attack_list = []
         self.head_zombie = pygame.sprite.GroupSingle()
         self.health = health
         self.can_zombie_move = True
