@@ -174,7 +174,7 @@ class Game:
         if pos_x > 4:
             pos_x = 4
         if pos_y < 0:
-            pos_y =0
+            pos_y = 0
         if pos_y > 8:
             pos_y = 8
         if self.canSeedPlant(pos_x, pos_y):

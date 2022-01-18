@@ -8,7 +8,6 @@ import constant
 class Pea(pygame.sprite.Sprite):
     def __init__(self, x, y, name, damage):
         super().__init__()
-
         self.name = name
         self.start_x = x
         self.start_y = y
